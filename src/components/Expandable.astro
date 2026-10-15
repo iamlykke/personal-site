@@ -68,13 +68,17 @@ const { id, label, bg, class: className } = Astro.props;
   }
 
   .overlay-inner {
+    --pad-y: 36px;
+    --pad-x: 40px;
     position: absolute;
     inset: 0;
     display: flex;
     flex-direction: column;
     gap: 28px;
-    padding: 36px 40px;
+    padding: var(--pad-y) var(--pad-x);
     overflow: auto;
+    overscroll-behavior: contain;
+    background: inherit;
     opacity: 0;
     transition: opacity 0.3s;
   }
@@ -84,11 +88,18 @@ const { id, label, bg, class: className } = Astro.props;
     transition-delay: 0.35s;
   }
 
+  /* заголовок прилипает при прокрутке — крестик всегда под рукой */
   header {
+    position: sticky;
+    top: calc(var(--pad-y) * -1);
+    z-index: 2;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 20px;
+    margin: calc(var(--pad-y) * -1) calc(var(--pad-x) * -1) 0;
+    padding: var(--pad-y) var(--pad-x) 16px;
+    background: inherit;
   }
 
   .close {
@@ -109,7 +120,8 @@ const { id, label, bg, class: className } = Astro.props;
 
   @media (max-width: 899px) {
     .overlay-inner {
-      padding: 24px 20px;
+      --pad-y: 24px;
+      --pad-x: 20px;
     }
   }
 </style>

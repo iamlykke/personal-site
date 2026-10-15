@@ -1,3 +1,9 @@
+import type { ImageMetadata } from 'astro';
+import space307 from './assets/projects/space307.png';
+import space307Poster from './assets/projects/space307-poster.jpg';
+import place01Poster from './assets/projects/place01-poster.jpg';
+import concertsArchive from './assets/projects/concerts-archive.png';
+
 export const site = {
   name: 'Sergei Usachev',
   title: 'Sergei Usachev — Frontend Engineer',
@@ -17,9 +23,9 @@ export const links = [
 ] as const;
 
 export const stackGroups = [
-  { title: 'Core', items: ['React', 'TypeScript', 'Next.js'] },
-  { title: 'State & data', items: ['Zustand', 'React Query'] },
-  { title: 'Tooling', items: ['Vite', 'Jest'] },
+  { title: 'Core', items: ['React', 'TypeScript', 'Next.js', 'Astro'] },
+  { title: 'State & data', items: ['Zustand', 'MobX', 'React Query'] },
+  { title: 'Tooling', items: ['Vite', 'Node.js', 'Jest', 'Figma'] },
   { title: 'Styling', items: ['Tailwind'] },
 ] as const;
 
@@ -57,14 +63,47 @@ export const about = {
   ],
 } as const;
 
-export const projects = [
-  { name: 'Personal site', stack: 'Astro · TypeScript', host: 'you are here', url: '/' },
-  { name: 'Space307', stack: 'React · Vite', host: 'space307.com', url: 'https://space307.com/' },
-  { name: 'Place01', stack: 'React · Vite', host: 'place01.ru', url: 'https://place01.ru/' },
-] as const;
+export type Project = {
+  name: string;
+  stack: string[];
+  host?: string;
+  /** без ссылки превью некликабельное */
+  url?: string;
+  image?: ImageMetadata;
+  /** короткая запись экрана для превью (лежит в public/video); bg — цвет полей вокруг, под фон сайта */
+  video?: { src: string; poster: ImageMetadata; bg: string };
+};
+
+export const projects: Project[] = [
+  {
+    name: 'Space307',
+    stack: ['React', 'TypeScript', 'Vite', 'Motion'],
+    host: 'space307.com',
+    url: 'https://space307.com/',
+    image: space307,
+    video: { src: '/video/space307.mp4', poster: space307Poster, bg: '#000' },
+  },
+  {
+    name: 'Place.01',
+    stack: ['React', 'TypeScript', 'Vite', 'Motion'],
+    host: 'place01.ru',
+    url: 'https://place01.ru/',
+    video: { src: '/video/place01.mp4', poster: place01Poster, bg: '#e3e2e1' },
+  },
+  {
+    name: 'Concerts Archive',
+    stack: ['Next.js', 'React', 'TypeScript'],
+    // домен не показываем — технический адрес Vercel
+    url: 'https://my-blog-blond-omega.vercel.app/',
+    image: concertsArchive,
+  },
+];
+
+// превью на плитке My Work
+export const featuredProject = projects[0];
 
 export const copy = {
-  work: 'Three production builds — an Astro personal site and two React + Vite landings.',
+  work: 'Three production builds — two React + Vite landings and a Next.js archive of every concert I’ve been to.',
   approach:
     'Readable over clever. Typed end to end, state kept where it belongs, and performance treated as a feature — not a phase.',
   about:

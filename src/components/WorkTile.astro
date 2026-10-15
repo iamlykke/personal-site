@@ -1,10 +1,30 @@
 ---
+import { Image } from 'astro:assets';
 import Expandable from './Expandable.astro';
-import { copy, projects } from '../content';
+import ProjectVideo from './ProjectVideo.astro';
+import { copy, projects, featuredProject } from '../content';
+
+const shotSizes = '(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw';
 ---
 
 <Expandable id="work-dialog" label="My work" bg="var(--bg-work)" class="work">
-  <div class="placeholder shot">project screenshot</div>
+  <div class:list={['shot', { 'shot-video': featuredProject.video }]}>
+    {
+      featuredProject.video ? (
+        <ProjectVideo name={featuredProject.name} video={featuredProject.video} />
+      ) : featuredProject.image ? (
+        <Image
+          src={featuredProject.image}
+          alt={`${featuredProject.name} website`}
+          widths={[400, 700, 1000]}
+          sizes={shotSizes}
+          loading="eager"
+        />
+      ) : (
+        <div class="placeholder">project screenshot</div>
+      )
+    }
+  </div>
   <div class="row">
     <h2 class="heading">My work</h2>
     <span class="arrow" aria-hidden="true">↗</span>
@@ -12,27 +32,44 @@ import { copy, projects } from '../content';
   <p class="text">{copy.work}</p>
 
   <Fragment slot="head">
-    <p class="label">Selected work · 0{projects.length}</p>
+    <p class="label">Selected work · {String(projects.length).padStart(2, '0')}</p>
     <h2 class="heading big">My work</h2>
   </Fragment>
 
   <ul slot="body" class="projects">
     {
       projects.map((p) => {
-        const external = p.url.startsWith('http');
+        // кликабельно только превью, и только если у проекта есть ссылка
+        const Shot = p.url ? 'a' : 'div';
         return (
           <li>
-            <a href={p.url} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
-              <div class="placeholder project-shot">screenshot · {p.host}</div>
-              <div class="project-name">
-                <span>{p.name}</span>
-                <span aria-hidden="true">↗</span>
-              </div>
-              <div class="project-meta">
-                <span>{p.stack}</span>
-                <span>{p.host}</span>
-              </div>
-            </a>
+            <Shot
+              class="project-shot"
+              href={p.url}
+              target={p.url && '_blank'}
+              rel={p.url && 'noopener'}
+              aria-label={p.url && `Open ${p.name}`}
+            >
+              {p.video ? (
+                <ProjectVideo name={p.name} video={p.video} />
+              ) : p.image ? (
+                <Image src={p.image} alt={p.url ? '' : `${p.name} website`} widths={[400, 700, 1000]} sizes={shotSizes} />
+              ) : (
+                <div class="placeholder">screenshot · {p.name}</div>
+              )}
+              {p.url && (
+                <span class="open-hint" aria-hidden="true">
+                  Open ↗
+                </span>
+              )}
+            </Shot>
+            <div class="project-title">
+              <h3 class="project-name">{p.name}</h3>
+              {p.host && <span class="project-host">{p.host}</span>}
+            </div>
+            <ul class="project-stack" aria-label="Stack">
+              {p.stack.map((tech) => <li>{tech}</li>)}
+            </ul>
           </li>
         );
       })
@@ -45,9 +82,31 @@ import { copy, projects } from '../content';
     background: var(--bg-work);
   }
 
+  .shot,
+  .project-shot {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
   .shot {
     flex: 1;
     min-height: 0;
+  }
+
+  /* <Image> и заглушка заполняют контейнер целиком */
+  .shot > :global(*),
+  .project-shot > :global(*) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .shot :global(img),
+  .project-shot :global(img) {
+    object-fit: cover;
+    object-position: center top;
   }
 
   .row {
@@ -60,63 +119,127 @@ import { copy, projects } from '../content';
     font-size: var(--fs-work);
   }
 
+  /* три в ряд, рядов сколько угодно; пока проектов мало — прижаты к низу, много — окно скроллится */
   .projects {
-    flex: 1;
-    min-height: 0;
+    margin-top: auto;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
+    gap: 36px 20px;
   }
 
-  .projects a {
+  .projects > li {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    height: 100%;
-    transition: opacity 0.25s;
+    gap: 12px;
   }
 
-  .projects a:hover {
-    opacity: 0.85;
-  }
-
+  /* пропорции экрана — широкие скриншоты не режутся в узкую полоску */
   .project-shot {
-    flex: 1;
-    min-height: 160px;
+    display: block;
+    aspect-ratio: 16 / 10;
+  }
+
+  /* лёгкое затемнение превью при наведении */
+  .project-shot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 22, 28, 0.22);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  /* плашка «Open» — в стиле переключателя режимов */
+  .project-shot > .open-hint {
+    position: absolute;
+    inset: auto auto 14px 14px;
+    z-index: 1;
+    width: auto;
+    height: auto;
+    padding: 8px 13px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    color: var(--ink);
+    font: 500 12px/1 var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0;
+    translate: 0 8px;
+    transition:
+      opacity 0.3s,
+      translate 0.4s cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
+
+  a.project-shot:is(:hover, :focus-visible)::after {
+    opacity: 1;
+  }
+
+  .project-shot:is(:hover, :focus-visible) > .open-hint {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  /* на тач-экранах наведения нет — плашка видна сразу, без затемнения */
+  @media (hover: none) {
+    .project-shot > .open-hint {
+      opacity: 1;
+      translate: 0 0;
+    }
   }
 
   .project-name {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 10px;
+    margin: 0;
     font-size: 24px;
     font-weight: 700;
     letter-spacing: -0.02em;
     text-transform: uppercase;
   }
 
-  .project-name span:last-child {
-    font-size: 18px;
-  }
-
-  .project-meta {
+  /* название слева, домен справа — всегда на одной линии */
+  .project-title {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .project-host {
+    flex: none;
     font: 400 12px var(--mono);
     color: var(--muted);
   }
 
+  /* технологии — чипы с заливкой, лишние переносятся */
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .project-stack li {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(20, 22, 28, 0.08);
+    font: 500 12px/1 var(--mono);
+  }
+
   @media (max-width: 899px) {
-    .projects {
+    /* плитка тут растёт по контенту — даём видео его родные пропорции на всю ширину */
+    .shot-video {
       flex: none;
-      grid-template-columns: 1fr;
+      aspect-ratio: 960 / 632;
     }
 
-    .project-shot {
-      flex: none;
-      height: 200px;
+    .projects {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 599px) {
+    .projects {
+      grid-template-columns: 1fr;
     }
   }
 </style>
+

@@ -1,0 +1,46 @@
+---
+import { getImage } from 'astro:assets';
+import type { Project } from '../content';
+
+interface Props {
+  name: string;
+  video: NonNullable<Project['video']>;
+}
+
+const { name, video } = Astro.props;
+const poster = await getImage({ src: video.poster, width: 960, format: 'webp' });
+---
+
+<video
+  class="project-video"
+  src={video.src}
+  poster={poster.src}
+  muted
+  loop
+  playsinline
+  preload="none"
+  style={`background: ${video.bg}`}
+  aria-label={`${name} website preview`}></video>
+
+<style>
+  /* видео показываем целиком; поля в цвет фона самого сайта — сливаются */
+  .project-video {
+    object-fit: contain;
+  }
+</style>
+
+<script>
+  // каждое видео крутится, только пока его видно (в закрытом диалоге — нет)
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (!reduced.matches) {
+    const observer = new IntersectionObserver((entries) => {
+      for (const { target, isIntersecting } of entries) {
+        const video = target as HTMLVideoElement;
+        if (isIntersecting) video.play().catch(() => {});
+        else video.pause();
+      }
+    });
+    document.querySelectorAll('.project-video').forEach((video) => observer.observe(video));
+  }
+</script>

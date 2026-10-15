@@ -72,6 +72,18 @@ import { stack, stackGroups } from '../content';
     transition-delay: calc(var(--i, 0) * 30ms);
   }
 
+  /* узкие десктопы: плитки узкие, чипов много — делаем компактнее, чтобы влезли */
+  @media (min-width: 900px) and (max-width: 1199px) {
+    .chips-draggable {
+      gap: 6px;
+    }
+
+    .chips-draggable .chip {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+  }
+
   /* informal: чипы над невидимой кнопкой плитки, чтобы их можно было таскать */
   :global([data-mode='informal']) .chips-draggable {
     position: relative;

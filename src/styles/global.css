@@ -37,10 +37,11 @@
   --muted: #3b3e47;
   --label: #4a4d57;
   --bg-photo: #d3d7e0;
-  --bg-work: #ffffff;
-  --bg-approach: var(--yellow);
+  /* цвета расставлены «шахматкой» по позициям в сетке, а не по смыслу плиток */
+  --bg-about: #ffffff;
+  --bg-work: var(--yellow);
   --bg-links: #f4f5f8;
-  --bg-about: var(--pink);
+  --bg-approach: var(--pink);
   --bg-stack: var(--mint);
 }
 
