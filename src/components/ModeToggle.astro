@@ -1,18 +1,20 @@
 <!-- иконки из Lucide (ISC) -->
 <div class="toggle" role="group" aria-label="Mode">
-  <button type="button" data-set-mode="formal" aria-label="Formal mode" title="Formal">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-      <rect width="20" height="14" x="2" y="6" rx="2"></rect>
-    </svg>
-  </button>
-  <button type="button" data-set-mode="informal" aria-label="Informal mode" title="Informal">
+  <button type="button" data-set-mode="informal" aria-label="Casual mode">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M10 2v2"></path>
       <path d="M14 2v2"></path>
       <path d="M6 2v2"></path>
       <path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"></path>
     </svg>
+    <span class="mode-label" aria-hidden="true">Casual</span>
+  </button>
+  <button type="button" data-set-mode="formal" aria-label="Formal mode">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+      <rect width="20" height="14" x="2" y="6" rx="2"></rect>
+    </svg>
+    <span class="mode-label" aria-hidden="true">Formal</span>
   </button>
 </div>
 
@@ -34,9 +36,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
+    min-width: 40px;
     height: 32px;
-    padding: 0;
+    padding: 0 11px;
     border: 0;
     border-radius: 999px;
     background: transparent;
@@ -48,6 +50,7 @@
   }
 
   svg {
+    flex: none;
     width: 17px;
     height: 17px;
     fill: none;
@@ -57,13 +60,66 @@
     stroke-linejoin: round;
   }
 
-  button[aria-pressed='true'] {
+  /* подпись видна только у активного режима — плавно раскрывается при переключении */
+  .mode-label {
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    white-space: nowrap;
+    font: 500 11px/1 var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition:
+      max-width 0.4s cubic-bezier(0.3, 1.2, 0.5, 1),
+      margin 0.4s,
+      opacity 0.3s;
+  }
+
+  /* активную кнопку берём из режима на <html> — он выставлен до отрисовки, без мигания */
+  :global([data-mode='informal']) [data-set-mode='informal'],
+  :global([data-mode='formal']) [data-set-mode='formal'] {
     background: var(--ink);
     color: #fff;
   }
 
-  :global([data-mode='informal']) button[aria-pressed='true'] {
+  :global([data-mode='informal']) [data-set-mode='informal'] {
     background: var(--accent);
+  }
+
+  :global([data-mode='informal']) [data-set-mode='informal'] .mode-label,
+  :global([data-mode='formal']) [data-set-mode='formal'] .mode-label {
+    max-width: 80px;
+    margin-left: 6px;
+    opacity: 1;
+  }
+
+  /* подсказка для нового посетителя: неактивная кнопка разок покачивается */
+  button.hint svg {
+    animation: nudge 0.9s ease-in-out;
+  }
+
+  @keyframes nudge {
+    0%,
+    100% {
+      rotate: 0deg;
+      scale: 1;
+    }
+    20% {
+      rotate: -16deg;
+      scale: 1.15;
+    }
+    40% {
+      rotate: 14deg;
+      scale: 1.15;
+    }
+    60% {
+      rotate: -10deg;
+      scale: 1.1;
+    }
+    80% {
+      rotate: 6deg;
+      scale: 1.05;
+    }
   }
 </style>
 
@@ -86,4 +142,26 @@
   });
 
   sync();
+
+  // первый визит: через пару секунд неактивная кнопка разок качнётся — «меня можно нажать».
+  // Только для новых посетителей (ещё ни разу не переключали) и только один раз.
+  const read = (key: string) => {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return 'blocked';
+    }
+  };
+
+  if (!read('mode') && !read('mode-hint')) {
+    setTimeout(() => {
+      const other = [...buttons].find((btn) => btn.dataset.setMode !== root.dataset.mode);
+      if (!other) return;
+      other.classList.add('hint');
+      other.addEventListener('animationend', () => other.classList.remove('hint'), { once: true });
+      try {
+        localStorage.setItem('mode-hint', 'seen');
+      } catch {}
+    }, 2500);
+  }
 </script>
