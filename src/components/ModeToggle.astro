@@ -1,0 +1,89 @@
+<!-- иконки из Lucide (ISC) -->
+<div class="toggle" role="group" aria-label="Mode">
+  <button type="button" data-set-mode="formal" aria-label="Formal mode" title="Formal">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+      <rect width="20" height="14" x="2" y="6" rx="2"></rect>
+    </svg>
+  </button>
+  <button type="button" data-set-mode="informal" aria-label="Informal mode" title="Informal">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M10 2v2"></path>
+      <path d="M14 2v2"></path>
+      <path d="M6 2v2"></path>
+      <path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"></path>
+    </svg>
+  </button>
+</div>
+
+<style>
+  .toggle {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    z-index: 3;
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+      background 0.3s,
+      color 0.3s;
+  }
+
+  svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  button[aria-pressed='true'] {
+    background: var(--ink);
+    color: #fff;
+  }
+
+  :global([data-mode='informal']) button[aria-pressed='true'] {
+    background: var(--accent);
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-set-mode]');
+
+  function sync() {
+    buttons.forEach((btn) => btn.setAttribute('aria-pressed', String(btn.dataset.setMode === root.dataset.mode)));
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      root.dataset.mode = btn.dataset.setMode;
+      try {
+        localStorage.setItem('mode', btn.dataset.setMode!);
+      } catch {}
+      sync();
+    });
+  });
+
+  sync();
+</script>

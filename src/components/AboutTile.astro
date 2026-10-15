@@ -1,0 +1,92 @@
+---
+import Expandable from './Expandable.astro';
+import { copy, about } from '../content';
+---
+
+<Expandable id="about-dialog" label="About" bg="var(--bg-about)" class="about">
+  <span class="arrow arrow-corner" aria-hidden="true">↗</span>
+  <p class="label">About</p>
+  <h1 class="heading">I'm Sergei,<br />a frontend engineer.</h1>
+  <p class="text">{copy.about}</p>
+
+  <Fragment slot="head">
+    <p class="label">About</p>
+    <h2 class="heading big">Hi, I'm Sergei</h2>
+  </Fragment>
+
+  <div slot="body" class="body">
+    <div class="story">
+      <p>{copy.about}</p>
+      {about.more.map((text) => <p>{text}</p>)}
+    </div>
+
+    <dl class="facts">
+      {
+        about.facts.map((fact) => (
+          <div>
+            <dt class="label">{fact.label}</dt>
+            <dd>{fact.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</Expandable>
+
+<style>
+  :global(.about) {
+    background: var(--bg-about);
+  }
+
+  :global(.about) h1 {
+    font-size: var(--fs-about);
+    line-height: 0.98;
+  }
+
+  .body {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 40px;
+    margin-top: auto;
+  }
+
+  .story {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 52ch;
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.45;
+  }
+
+  .story p {
+    margin: 0;
+  }
+
+  .facts {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .facts div {
+    padding-top: 14px;
+    border-top: 1.5px solid currentColor;
+  }
+
+  dd {
+    margin: 6px 0 0;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 899px) {
+    .body {
+      grid-template-columns: 1fr;
+      margin-top: 0;
+    }
+  }
+</style>

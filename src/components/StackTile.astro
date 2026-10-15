@@ -1,0 +1,146 @@
+---
+import Expandable from './Expandable.astro';
+import { stack, stackGroups } from '../content';
+---
+
+<Expandable id="stack-dialog" label="Stack" bg="var(--bg-stack)" class="stack">
+  <span class="arrow arrow-corner" aria-hidden="true">↗</span>
+  <p class="label">Stack</p>
+  <h2 class="heading">Tools I ship with.</h2>
+  <ul class="chips chips-draggable">
+    {
+      stack.map((name, i) => (
+        <li>
+          <span class="chip" style={`--i: ${i}`}>
+            {name}
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <Fragment slot="head">
+    <p class="label">Stack · {stack.length} tools</p>
+    <h2 class="heading big">Tools I ship with</h2>
+  </Fragment>
+
+  <div slot="body" class="groups">
+    {
+      stackGroups.map((group) => (
+        <section>
+          <h3 class="label">{group.title}</h3>
+          <ul class="chips chips-big">
+            {group.items.map((name) => (
+              <li>
+                <span class="chip">{name}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</Expandable>
+
+<style>
+  :global(.stack) {
+    background: var(--bg-stack);
+  }
+
+  :global(.stack) h2 {
+    font-size: var(--fs-about);
+    line-height: 0.98;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip {
+    display: inline-block;
+    padding: 7px 13px;
+    border: 1.5px solid currentColor;
+    border-radius: 999px;
+    font: 500 13px/1 var(--mono);
+    transition:
+      background 0.3s,
+      color 0.3s,
+      border-color 0.3s,
+      box-shadow 0.3s;
+    transition-delay: calc(var(--i, 0) * 30ms);
+  }
+
+  /* informal: чипы над невидимой кнопкой плитки, чтобы их можно было таскать */
+  :global([data-mode='informal']) .chips-draggable {
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  :global([data-mode='informal']) .chips-draggable li {
+    pointer-events: auto;
+  }
+
+  /* informal: при наведении чипы заливаются цветами палитры */
+  .chips li:nth-child(5n + 1) .chip {
+    --chip-bg: var(--accent);
+    --chip-ink: #fff;
+  }
+
+  .chips li:nth-child(5n + 2) .chip {
+    --chip-bg: var(--ink);
+    --chip-ink: #fff;
+  }
+
+  .chips li:nth-child(5n + 3) .chip {
+    --chip-bg: var(--yellow);
+  }
+
+  .chips li:nth-child(5n + 4) .chip {
+    --chip-bg: #fff;
+  }
+
+  .chips li:nth-child(5n + 5) .chip {
+    --chip-bg: var(--pink);
+  }
+
+  :global([data-mode='informal'] .stack:hover) .chip {
+    border-color: var(--ink);
+    background: var(--chip-bg);
+    color: var(--chip-ink, var(--ink));
+    box-shadow: 0 2px 0 var(--ink);
+  }
+
+  .groups {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px;
+    margin-top: auto;
+  }
+
+  .groups section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 14px;
+    border-top: 1.5px solid currentColor;
+  }
+
+  .groups h3 {
+    margin: 0;
+  }
+
+  .chips-big .chip {
+    padding: 12px 20px;
+    font-size: 18px;
+  }
+
+  @media (max-width: 899px) {
+    .groups {
+      grid-template-columns: 1fr;
+      margin-top: 0;
+    }
+  }
+</style>

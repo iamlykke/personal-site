@@ -1,0 +1,326 @@
+:root {
+  --accent: oklch(0.55 0.2 265);
+  --ink: #14161c;
+  --yellow: oklch(0.9 0.14 95);
+  --pink: oklch(0.8 0.12 350);
+  --mint: oklch(0.88 0.1 165);
+  --band: 24px;
+  --panel-r: 18px;
+
+  --font: 'Archivo', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* растут вместе с экраном; vh не даёт тексту вылезти из плитки на низких экранах */
+  --fs-work: clamp(42px, min(3.8vw, 6.4vh), 64px);
+  --fs-approach: clamp(38px, min(3.4vw, 5.7vh), 58px);
+  --fs-about: clamp(36px, min(3.2vw, 5.4vh), 54px);
+  --fs-links: clamp(27px, min(2.4vw, 4vh), 40px);
+
+  /* formal */
+  --panel: #f7f8fa;
+  --gap: 10px;
+  --r: 14px;
+  --muted: #555963;
+  --label: #6b6f7a;
+  --bg-photo: #d9dce4;
+  --bg-work: #eceef3;
+  --bg-approach: #eceef3;
+  --bg-links: #eceef3;
+  --bg-about: #eceef3;
+  --bg-stack: #eceef3;
+}
+
+[data-mode='informal'] {
+  --panel: #eceef3;
+  --gap: 0px;
+  --r: 0px;
+  --muted: #3b3e47;
+  --label: #4a4d57;
+  --bg-photo: #d3d7e0;
+  --bg-work: #ffffff;
+  --bg-approach: var(--yellow);
+  --bg-links: #f4f5f8;
+  --bg-about: var(--pink);
+  --bg-stack: var(--mint);
+}
+
+@media (max-width: 899px) {
+  :root {
+    --band: 14px;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--accent);
+  color: var(--ink);
+  font: 500 14px/1.5 var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+p,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 14px;
+  min-width: 0;
+  padding: 30px;
+  overflow: hidden;
+  border-radius: var(--r);
+  transition:
+    background 0.5s,
+    border-radius 0.5s,
+    opacity 0.4s;
+}
+
+@media (max-width: 899px) {
+  .tile {
+    min-height: 320px;
+  }
+}
+
+.arrow {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  font-size: 18px;
+  /* rotate отдельным свойством: transform занят магнитом из GSAP */
+  transition:
+    rotate 0.3s,
+    background 0.3s,
+    border-color 0.3s;
+}
+
+.arrow-corner {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  width: 34px;
+  height: 34px;
+  font-size: 15px;
+}
+
+.tile:hover .arrow {
+  rotate: 45deg;
+}
+
+[data-mode='formal'] .tile:hover .arrow {
+  border-color: #fff;
+  background: #fff;
+}
+
+.big {
+  font-size: clamp(76px, 6.5vw, 110px);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+
+.overlay .label {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 899px) {
+  .big {
+    font-size: 48px;
+  }
+}
+
+.label {
+  font: 500 12px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.heading {
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+
+.text {
+  max-width: 36ch;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(127, 127, 127, 0.18);
+  border-radius: 8px;
+  background: repeating-linear-gradient(135deg, rgba(127, 127, 127, 0.12) 0 10px, transparent 10px 20px);
+  font: 500 11px var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* лайк на фото (элементы создаются из photo-like.ts) */
+.photo {
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.like {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.like svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  translate: -50% -50%;
+}
+
+.like-big {
+  width: 96px;
+  height: 96px;
+  fill: #fff;
+  filter: drop-shadow(0 6px 18px rgba(20, 22, 28, 0.25));
+  animation: like-pop 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.like-mini {
+  width: 18px;
+  height: 18px;
+  fill: var(--c);
+  animation: like-burst 0.8s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+
+@keyframes like-pop {
+  0% {
+    opacity: 0;
+    scale: 0;
+  }
+  15% {
+    opacity: 1;
+    scale: 1.25;
+  }
+  30% {
+    scale: 0.95;
+  }
+  45% {
+    scale: 1.05;
+  }
+  75% {
+    opacity: 1;
+    scale: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    scale: 0.9;
+    transform: translateY(-40px);
+  }
+}
+
+@keyframes like-burst {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.3);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--x), var(--y)) scale(1) rotate(var(--r));
+  }
+}
+
+.likes {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  font: 500 12px/1 var(--mono);
+  opacity: 0;
+  scale: 0.6;
+  transition:
+    opacity 0.3s,
+    scale 0.4s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+.likes svg {
+  width: 14px;
+  height: 14px;
+  fill: var(--pink);
+}
+
+[data-mode='informal'] .likes.is-visible {
+  opacity: 1;
+  scale: 1;
+}
+
+.likes.bump svg {
+  animation: like-bump 0.4s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+@keyframes like-bump {
+  50% {
+    scale: 1.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,122 @@
+---
+import Expandable from './Expandable.astro';
+import { copy, projects } from '../content';
+---
+
+<Expandable id="work-dialog" label="My work" bg="var(--bg-work)" class="work">
+  <div class="placeholder shot">project screenshot</div>
+  <div class="row">
+    <h2 class="heading">My work</h2>
+    <span class="arrow" aria-hidden="true">↗</span>
+  </div>
+  <p class="text">{copy.work}</p>
+
+  <Fragment slot="head">
+    <p class="label">Selected work · 0{projects.length}</p>
+    <h2 class="heading big">My work</h2>
+  </Fragment>
+
+  <ul slot="body" class="projects">
+    {
+      projects.map((p) => {
+        const external = p.url.startsWith('http');
+        return (
+          <li>
+            <a href={p.url} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
+              <div class="placeholder project-shot">screenshot · {p.host}</div>
+              <div class="project-name">
+                <span>{p.name}</span>
+                <span aria-hidden="true">↗</span>
+              </div>
+              <div class="project-meta">
+                <span>{p.stack}</span>
+                <span>{p.host}</span>
+              </div>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</Expandable>
+
+<style>
+  :global(.work) {
+    background: var(--bg-work);
+  }
+
+  .shot {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  :global(.work) h2 {
+    font-size: var(--fs-work);
+  }
+
+  .projects {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .projects a {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: 100%;
+    transition: opacity 0.25s;
+  }
+
+  .projects a:hover {
+    opacity: 0.85;
+  }
+
+  .project-shot {
+    flex: 1;
+    min-height: 160px;
+  }
+
+  .project-name {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .project-name span:last-child {
+    font-size: 18px;
+  }
+
+  .project-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font: 400 12px var(--mono);
+    color: var(--muted);
+  }
+
+  @media (max-width: 899px) {
+    .projects {
+      flex: none;
+      grid-template-columns: 1fr;
+    }
+
+    .project-shot {
+      flex: none;
+      height: 200px;
+    }
+  }
+</style>

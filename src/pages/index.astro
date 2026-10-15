@@ -1,0 +1,224 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ModeToggle from '../components/ModeToggle.astro';
+import WorkTile from '../components/WorkTile.astro';
+import ApproachTile from '../components/ApproachTile.astro';
+import AboutTile from '../components/AboutTile.astro';
+import StackTile from '../components/StackTile.astro';
+import Marquee from '../components/Marquee.astro';
+import Cursor from '../components/Cursor.astro';
+import { site, links } from '../content';
+import { heart } from '../icons';
+import { Picture } from 'astro:assets';
+import portraitFormal from '../assets/portrait-formal.jpg';
+---
+
+<Layout title={site.title} description={site.description}>
+  <div class="frame">
+    <Marquee />
+
+    <main class="panel">
+      <div class="grid">
+        <section class="tile photo" aria-label="Photo">
+          <Picture
+            src={portraitFormal}
+            alt="Sergei Usachev"
+            formats={['avif', 'webp']}
+            widths={[400, 700, 1000]}
+            sizes="(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw"
+            loading="eager"
+            fetchpriority="high"
+            class="photo-img portrait-formal"
+          />
+          <!-- TODO: фото для informal -->
+          <div class="portrait portrait-informal">portrait · colour, candid</div>
+          <ModeToggle />
+          <div class="likes" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d={heart}></path></svg>
+            <span>0</span>
+          </div>
+        </section>
+
+        <WorkTile />
+        <ApproachTile />
+
+        <nav class="tile links" aria-label="Links">
+          <ul>
+            {
+              links.map((link) => (
+                <li>
+                  <a href={link.href} target="_blank" rel="noopener">
+                    {link.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        <AboutTile />
+        <StackTile />
+      </div>
+    </main>
+  </div>
+
+  <Cursor />
+</Layout>
+
+<script>
+  import '../scripts/hover-effects';
+  import '../scripts/photo-like';
+  import '../scripts/shuffle';
+</script>
+
+<style>
+  .frame {
+    position: relative;
+    height: 100dvh;
+    min-height: 640px;
+    padding: var(--band);
+    overflow: hidden;
+  }
+
+  .panel {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: var(--panel-r);
+    background: var(--panel);
+    transition: background 0.5s;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: var(--gap);
+    height: 100%;
+    padding: var(--gap);
+    transition:
+      gap 0.5s,
+      padding 0.5s;
+  }
+
+  /* formal: плитка под курсором в фокусе, остальные (кроме фото) тускнеют */
+  @media (hover: hover) {
+    :global([data-mode='formal'] .grid:has(> .tile:not(.photo):hover) > .tile:not(.photo):not(:hover)) {
+      opacity: 0.35;
+    }
+  }
+
+  /* photo */
+  .photo {
+    padding: 0;
+    background: var(--bg-photo);
+  }
+
+  .portrait {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 22px;
+    background: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.06) 0 10px, transparent 10px 20px);
+    font: 500 11px/1.4 var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(20, 22, 28, 0.6);
+    transition: opacity 0.5s;
+  }
+
+  /* <Picture> — компонент, scoped-класс до img не доходит */
+  :global(.photo-img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 55%;
+    transition: opacity 0.5s;
+  }
+
+  .portrait-informal,
+  :global([data-mode='informal'] .portrait-formal) {
+    opacity: 0;
+  }
+
+  :global([data-mode='informal']) .portrait-informal {
+    opacity: 1;
+  }
+
+  /* links */
+  .links {
+    background: var(--bg-links);
+  }
+
+  .links ul {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .links a {
+    display: inline-block;
+    margin-left: -6px;
+    padding: 0 6px;
+    border-radius: 6px;
+    font-size: var(--fs-links);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    /* заливка выезжает слева направо */
+    background: linear-gradient(var(--hl), var(--hl)) no-repeat left / 0% 100%;
+    transition:
+      transform 0.25s,
+      color 0.4s,
+      background-size 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .links li:nth-child(4n + 1) a {
+    --hl: var(--yellow);
+  }
+
+  .links li:nth-child(4n + 2) a {
+    --hl: var(--pink);
+  }
+
+  .links li:nth-child(4n + 3) a {
+    --hl: var(--mint);
+  }
+
+  .links li:nth-child(4n + 4) a {
+    --hl: var(--accent);
+    --hl-ink: #fff;
+  }
+
+  :global([data-mode='formal']) .links a:hover {
+    transform: translateX(8px);
+    color: var(--accent);
+  }
+
+  :global([data-mode='informal']) .links a:hover {
+    background-size: 100% 100%;
+    color: var(--hl-ink, var(--ink));
+  }
+
+  @media (max-width: 899px) {
+    .frame {
+      height: auto;
+      min-height: 100dvh;
+    }
+
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: none;
+    }
+  }
+
+  @media (max-width: 599px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

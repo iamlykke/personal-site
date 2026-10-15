@@ -1,0 +1,79 @@
+---
+import Expandable from './Expandable.astro';
+import { copy, principles } from '../content';
+---
+
+<Expandable id="approach-dialog" label="Approach" bg="var(--bg-approach)" class="approach">
+  <span class="arrow arrow-corner" aria-hidden="true">↗</span>
+  <p class="label">Approach</p>
+  <h2 class="heading">How I build</h2>
+  <p class="text">{copy.approach}</p>
+
+  <Fragment slot="head">
+    <p class="label">Approach · 0{principles.length} principles</p>
+    <h2 class="heading big">How I build</h2>
+  </Fragment>
+
+  <ol slot="body" class="principles">
+    {
+      principles.map((p, i) => (
+        <li>
+          <span class="num">0{i + 1}</span>
+          <h3 class="heading">{p.title}</h3>
+          <p class="text">{p.text}</p>
+        </li>
+      ))
+    }
+  </ol>
+</Expandable>
+
+<style>
+  :global(.approach) {
+    background: var(--bg-approach);
+  }
+
+  :global(.approach) h2 {
+    font-size: var(--fs-approach);
+    line-height: 0.98;
+  }
+
+  .principles {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 36px 40px;
+    margin-top: auto;
+  }
+
+  .principles li {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 18px;
+    border-top: 1.5px solid currentColor;
+  }
+
+  .num {
+    font: 500 12px var(--mono);
+    letter-spacing: 0.08em;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: clamp(28px, 2.6vw, 40px);
+  }
+
+  .principles .text {
+    font-size: 16px;
+    max-width: 44ch;
+  }
+
+  @media (max-width: 899px) {
+    .principles {
+      grid-template-columns: 1fr;
+      margin-top: 0;
+    }
+  }
+</style>

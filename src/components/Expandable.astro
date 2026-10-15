@@ -1,0 +1,185 @@
+---
+interface Props {
+  id: string;
+  label: string;
+  bg: string;
+  class?: string;
+}
+
+const { id, label, bg, class: className } = Astro.props;
+---
+
+<section class:list={['tile', className]} data-expand={id}>
+  <slot />
+  <button type="button" class="open" aria-haspopup="dialog" aria-controls={id} aria-label={`Open ${label}`}></button>
+</section>
+
+<dialog id={id} class="overlay" aria-label={label} style={`background: ${bg}`}>
+  <div class="overlay-inner">
+    <header>
+      <div><slot name="head" /></div>
+      <button type="button" class="close" aria-label="Close">✕</button>
+    </header>
+    <slot name="body" />
+  </div>
+</dialog>
+
+<style>
+  /* невидимая кнопка на всю плитку — кликается вся плитка */
+  .open {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border: 0;
+    border-radius: inherit;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .open:focus-visible {
+    outline-offset: -4px;
+  }
+
+  .overlay {
+    position: fixed;
+    inset: auto;
+    margin: 0;
+    padding: 0;
+    max-width: none;
+    max-height: none;
+    border: 0;
+    overflow: hidden;
+    color: var(--ink);
+    --ease: cubic-bezier(0.7, 0, 0.2, 1);
+    transition:
+      top 0.6s var(--ease),
+      left 0.6s var(--ease),
+      width 0.6s var(--ease),
+      height 0.6s var(--ease),
+      border-radius 0.6s var(--ease);
+  }
+
+  .overlay::backdrop {
+    background: transparent;
+  }
+
+  :global(html:has(dialog[open])) {
+    overflow: hidden;
+  }
+
+  .overlay-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 36px 40px;
+    overflow: auto;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .is-open .overlay-inner {
+    opacity: 1;
+    transition-delay: 0.35s;
+  }
+
+  header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .close {
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+    transition: rotate 0.3s;
+  }
+
+  .close:hover {
+    rotate: 90deg;
+  }
+
+  @media (max-width: 899px) {
+    .overlay-inner {
+      padding: 24px 20px;
+    }
+  }
+</style>
+
+<script>
+  const panel = document.querySelector<HTMLElement>('.panel')!;
+  const mobile = matchMedia('(max-width: 899px)');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+
+  type Rect = { top: number; left: number; width: number; height: number };
+
+  document.querySelectorAll<HTMLElement>('[data-expand]').forEach((tile) => {
+    const dialog = document.getElementById(tile.dataset.expand!) as HTMLDialogElement;
+    const openBtn = tile.querySelector<HTMLButtonElement>('.open')!;
+    const closeBtn = dialog.querySelector<HTMLButtonElement>('.close')!;
+
+    function place(rect: Rect, radius: string) {
+      dialog.style.top = `${rect.top}px`;
+      dialog.style.left = `${rect.left}px`;
+      dialog.style.width = `${rect.width}px`;
+      dialog.style.height = `${rect.height}px`;
+      dialog.style.borderRadius = radius;
+    }
+
+    function placeOpen() {
+      if (mobile.matches) {
+        place({ top: 0, left: 0, width: innerWidth, height: innerHeight }, '0px');
+      } else {
+        place(panel.getBoundingClientRect(), 'var(--panel-r)');
+      }
+    }
+
+    function placeOnTile() {
+      place(tile.getBoundingClientRect(), getComputedStyle(tile).borderRadius);
+    }
+
+    function open() {
+      placeOnTile();
+      dialog.showModal();
+      // два кадра, чтобы браузер успел отрисовать стартовую позицию
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          dialog.classList.add('is-open');
+          placeOpen();
+        }),
+      );
+      window.addEventListener('resize', placeOpen);
+    }
+
+    function close() {
+      if (!dialog.classList.contains('is-open')) return;
+      window.removeEventListener('resize', placeOpen);
+      dialog.classList.remove('is-open');
+      placeOnTile();
+      setTimeout(
+        () => {
+          dialog.close();
+          openBtn.focus();
+        },
+        reduced.matches ? 0 : 600,
+      );
+    }
+
+    openBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+
+    // Esc — закрываем с анимацией, а не мгновенно
+    dialog.addEventListener('cancel', (e) => {
+      e.preventDefault();
+      close();
+    });
+  });
+</script>
