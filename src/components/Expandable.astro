@@ -52,12 +52,13 @@ const { id, label, bg, class: className } = Astro.props;
     overflow: hidden;
     color: var(--ink);
     --ease: cubic-bezier(0.7, 0, 0.2, 1);
+    --dur: 0.6s;
     transition:
-      top 0.6s var(--ease),
-      left 0.6s var(--ease),
-      width 0.6s var(--ease),
-      height 0.6s var(--ease),
-      border-radius 0.6s var(--ease);
+      top var(--dur) var(--ease),
+      left var(--dur) var(--ease),
+      width var(--dur) var(--ease),
+      height var(--dur) var(--ease),
+      border-radius var(--dur) var(--ease);
   }
 
   .overlay::backdrop {
@@ -127,6 +128,16 @@ const { id, label, bg, class: className } = Astro.props;
     .overlay-inner {
       --pad-y: 24px;
       --pad-x: 20px;
+    }
+
+    /* на телефоне короче, с мягким разгоном: не тягуче, но и не резко */
+    .overlay {
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --dur: 0.45s;
+    }
+
+    .is-open .overlay-inner {
+      transition-delay: 0.22s;
     }
   }
 </style>
@@ -201,7 +212,8 @@ const { id, label, bg, class: className } = Astro.props;
           dialog.close();
           openBtn.focus();
         },
-        reduced.matches ? 0 : 600,
+        // совпадает с --dur в CSS
+        reduced.matches ? 0 : mobile.matches ? 450 : 600,
       );
     }
 

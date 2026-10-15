@@ -56,6 +56,19 @@
   }
 }
 
+/* телефон: без синей рамки — плитки от края до края */
+@media (max-width: 599px) {
+  :root {
+    --band: 0px;
+    --panel-r: 0px;
+  }
+
+  /* html body — правило стоит выше основного body и иначе проиграет ему */
+  html body {
+    background: var(--panel);
+  }
+}
+
 *,
 *::before,
 *::after {
