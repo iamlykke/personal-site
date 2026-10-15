@@ -316,6 +316,51 @@ img {
   }
 }
 
+/* «Copied!» над курсором после копирования email (copy-email.ts) */
+.copied {
+  position: fixed;
+  z-index: 11;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--yellow);
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgba(20, 22, 28, 0.15);
+  font: 500 12px/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  translate: -50% calc(-100% - 14px);
+  opacity: 0;
+  animation: copied 1.2s cubic-bezier(0.3, 1.4, 0.5, 1) forwards;
+}
+
+@keyframes copied {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.8);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  75% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copied {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

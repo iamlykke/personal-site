@@ -1,0 +1,30 @@
+---
+// Флаг Сербии без герба: на маленьком размере герб всё равно читается как пятно.
+// Эмодзи не используем — на Windows флаги-смайлики показываются буквами «RS».
+---
+
+<svg class="flag" viewBox="0 0 3 2" role="img" aria-label="Flag of Serbia">
+  <rect width="3" height="0.667" fill="#c6363c"></rect>
+  <rect y="0.667" width="3" height="0.667" fill="#0c4076"></rect>
+  <rect y="1.333" width="3" height="0.667" fill="#fff"></rect>
+</svg>
+
+<style>
+  .flag {
+    display: inline-block;
+    width: 1.1em;
+    height: auto;
+    margin-left: 0.35em;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px rgba(20, 22, 28, 0.15);
+    vertical-align: -0.02em;
+    transition: rotate 0.6s cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
+
+  /* пасхалка: перевёрнутый сербский флаг — это российский.
+     Ховер ловим на неподвижном родителе (.flag-zone), иначе флаг при повороте
+     уходит из-под курсора и начинает дёргаться */
+  :global([data-mode='informal'] .flag-zone:hover) .flag {
+    rotate: 180deg;
+  }
+</style>

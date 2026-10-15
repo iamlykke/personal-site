@@ -57,7 +57,7 @@ export const about = {
     'Lately I have been shipping landing pages and product interfaces with React, TypeScript and Vite — and built this site with Astro.',
   ],
   facts: [
-    { label: 'Based in', value: 'Serbia' },
+    { label: 'Based in', value: 'Serbia', flag: 'rs' },
     { label: 'Focus', value: 'React · TypeScript' },
     { label: 'Status', value: 'Open for new opportunities' },
   ],

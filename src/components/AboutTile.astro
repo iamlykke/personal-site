@@ -1,5 +1,6 @@
 ---
 import Expandable from './Expandable.astro';
+import FlagRS from './FlagRS.astro';
 import { copy, about } from '../content';
 ---
 
@@ -23,9 +24,12 @@ import { copy, about } from '../content';
     <dl class="facts">
       {
         about.facts.map((fact) => (
-          <div>
+          <div class:list={{ 'flag-zone': 'flag' in fact }}>
             <dt class="label">{fact.label}</dt>
-            <dd>{fact.value}</dd>
+            <dd>
+              {fact.value}
+              {'flag' in fact && <FlagRS />}
+            </dd>
           </div>
         ))
       }
