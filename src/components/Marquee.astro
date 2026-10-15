@@ -79,11 +79,9 @@ import { copy } from '../content';
     right: 0;
   }
 
-  @media (max-width: 599px) {
-    .marquee {
-      opacity: 1;
-    }
-
+  /* на тач-устройствах наведения нет — строку не показываем вовсе */
+  @media (hover: none), (max-width: 599px) {
+    .marquee,
     .strip {
       display: none;
     }
@@ -140,7 +138,10 @@ import { copy } from '../content';
     requestAnimationFrame(tick);
   }
 
-  document.fonts.ready.then(() => {
+  // на тач-устройствах строка скрыта — и анимацию не крутим зря
+  const hidden = matchMedia('(hover: none), (max-width: 599px)').matches;
+
+  if (!hidden) document.fonts.ready.then(() => {
     unitWidth = measureUnit();
     layout();
     new ResizeObserver(layout).observe(frame);
