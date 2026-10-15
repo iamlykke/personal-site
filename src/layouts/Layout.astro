@@ -28,7 +28,7 @@ const person = {
 ---
 
 <!doctype html>
-<html lang="en" data-mode="formal">
+<html lang="en" data-mode="informal">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -58,7 +58,8 @@ const person = {
     <!-- ставим режим до отрисовки, чтобы не мигало -->
     <script is:inline>
       try {
-        if (localStorage.getItem('mode') === 'informal') document.documentElement.dataset.mode = 'informal';
+        // по умолчанию informal; formal — только если человек сам его выбрал
+        if (localStorage.getItem('mode') === 'formal') document.documentElement.dataset.mode = 'formal';
       } catch {}
     </script>
   </head>

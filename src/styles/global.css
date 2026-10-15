@@ -4,7 +4,8 @@
   --yellow: oklch(0.9 0.14 95);
   --pink: oklch(0.8 0.12 350);
   --mint: oklch(0.88 0.1 165);
-  --band: 32px;
+  --lavender: oklch(0.84 0.08 285);
+  --band: 28px;
   --panel-r: 18px;
 
   --font: 'Archivo', system-ui, sans-serif;
