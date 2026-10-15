@@ -5,6 +5,7 @@ import '@fontsource/archivo/latin-800.css';
 import '@fontsource/jetbrains-mono/latin-400.css';
 import '@fontsource/jetbrains-mono/latin-500.css';
 import '../styles/global.css';
+import Analytics from '@vercel/analytics/astro';
 import { site, links } from '../content';
 
 interface Props {
@@ -65,5 +66,7 @@ const person = {
   </head>
   <body>
     <slot />
+    <!-- Vercel Web Analytics: без cookies, данные видно в дашборде проекта -->
+    <Analytics />
   </body>
 </html>
