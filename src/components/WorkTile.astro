@@ -5,6 +5,9 @@ import ProjectVideo from './ProjectVideo.astro';
 import { copy, projects, featuredProject } from '../content';
 
 const shotSizes = '(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw';
+// превью в раскрытом списке: на всю ширину окна (~60% экрана на десктопе);
+// у скриншотов мелкий текст, поэтому там quality={90}
+const cardSizes = '(max-width: 899px) 100vw, 60vw';
 ---
 
 <Expandable id="work-dialog" label="My work" bg="var(--bg-work)" class="work">
@@ -53,7 +56,13 @@ const shotSizes = '(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw';
               {p.video ? (
                 <ProjectVideo name={p.name} video={p.video} />
               ) : p.image ? (
-                <Image src={p.image} alt={p.url ? '' : `${p.name} website`} widths={[400, 700, 1000]} sizes={shotSizes} />
+                <Image
+                  src={p.image}
+                  alt={p.url ? '' : `${p.name} website`}
+                  widths={[600, 900, 1200, 1480]}
+                  sizes={cardSizes}
+                  quality={90}
+                />
               ) : (
                 <div class="placeholder">screenshot · {p.name}</div>
               )}
@@ -67,6 +76,7 @@ const shotSizes = '(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw';
               <h3 class="project-name">{p.name}</h3>
               {p.host && <span class="project-host">{p.host}</span>}
             </div>
+            <p class="project-desc">{p.description}</p>
             <ul class="project-stack" aria-label="Stack">
               {p.stack.map((tech) => <li>{tech}</li>)}
             </ul>
@@ -119,12 +129,11 @@ const shotSizes = '(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw';
     font-size: var(--fs-work);
   }
 
-  /* три в ряд, рядов сколько угодно; пока проектов мало — прижаты к низу, много — окно скроллится */
+  /* по одному проекту в строке, крупные превью; окно скроллится */
   .projects {
-    margin-top: auto;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 36px 20px;
+    grid-template-columns: 1fr;
+    gap: 44px;
   }
 
   .projects > li {
@@ -192,22 +201,40 @@ const shotSizes = '(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw';
     margin: 0;
     font-size: 24px;
     font-weight: 700;
+    line-height: 1.1;
     letter-spacing: -0.02em;
     text-transform: uppercase;
   }
 
-  /* название слева, домен справа — всегда на одной линии */
+  /* название слева, домен справа — всегда на одной линии.
+     Отступы: превью → название 18px, название ↔ описание вплотную (одна группа), описание → чипы 12px */
   .project-title {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     gap: 16px;
+    margin-top: 6px;
+  }
+
+  .project-title + .project-desc {
+    margin-top: -6px;
   }
 
   .project-host {
     flex: none;
     font: 400 12px var(--mono);
     color: var(--muted);
+  }
+
+  .project-desc {
+    margin: 0;
+    max-width: 62ch;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--muted);
+    text-wrap: pretty;
+    /* \n в описании из content.ts — перенос строки */
+    white-space: pre-line;
   }
 
   /* технологии — чипы с заливкой, лишние переносятся */
@@ -229,16 +256,6 @@ const shotSizes = '(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw';
     .shot-video {
       flex: none;
       aspect-ratio: 960 / 632;
-    }
-
-    .projects {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (max-width: 599px) {
-    .projects {
-      grid-template-columns: 1fr;
     }
   }
 </style>

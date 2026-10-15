@@ -20,6 +20,8 @@
   --panel: #f7f8fa;
   --gap: 10px;
   --r: 14px;
+  /* скругление раскрытой плитки, когда она занимает правые колонки */
+  --area-r: var(--r);
   --muted: #555963;
   --label: #6b6f7a;
   --bg-photo: #d9dce4;
@@ -34,6 +36,8 @@
   --panel: #eceef3;
   --gap: 0px;
   --r: 0px;
+  /* плитки стык в стык — справа повторяем скругление панели */
+  --area-r: 0 var(--panel-r) var(--panel-r) 0;
   --muted: #3b3e47;
   --label: #4a4d57;
   --bg-photo: #d3d7e0;

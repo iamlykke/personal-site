@@ -42,6 +42,7 @@ const { id, label, bg, class: className } = Astro.props;
 
   .overlay {
     position: fixed;
+    z-index: 5;
     inset: auto;
     margin: 0;
     padding: 0;
@@ -78,7 +79,11 @@ const { id, label, bg, class: className } = Astro.props;
     padding: var(--pad-y) var(--pad-x);
     overflow: auto;
     overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(20, 22, 28, 0.25) transparent;
     background: inherit;
+    /* раскладки внутри подстраиваются под ширину окна, а не экрана (@container) */
+    container-type: inline-size;
     opacity: 0;
     transition: opacity 0.3s;
   }
@@ -127,11 +132,22 @@ const { id, label, bg, class: className } = Astro.props;
 </style>
 
 <script>
-  const panel = document.querySelector<HTMLElement>('.panel')!;
+  const grid = document.querySelector<HTMLElement>('.grid')!;
   const mobile = matchMedia('(max-width: 899px)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 
   type Rect = { top: number; left: number; width: number; height: number };
+
+  // правые две колонки сетки — левая (фото и ссылки) остаётся на виду
+  function contentArea(): Rect {
+    const rect = grid.getBoundingClientRect();
+    const style = getComputedStyle(grid);
+    const pad = parseFloat(style.paddingTop);
+    const gap = parseFloat(style.columnGap);
+    const col = (rect.width - pad * 2 - gap * 2) / 3;
+    const left = rect.left + pad + col + gap;
+    return { top: rect.top + pad, left, width: rect.right - pad - left, height: rect.height - pad * 2 };
+  }
 
   document.querySelectorAll<HTMLElement>('[data-expand]').forEach((tile) => {
     const dialog = document.getElementById(tile.dataset.expand!) as HTMLDialogElement;
@@ -150,7 +166,7 @@ const { id, label, bg, class: className } = Astro.props;
       if (mobile.matches) {
         place({ top: 0, left: 0, width: innerWidth, height: innerHeight }, '0px');
       } else {
-        place(panel.getBoundingClientRect(), 'var(--panel-r)');
+        place(contentArea(), 'var(--area-r)');
       }
     }
 
@@ -160,7 +176,11 @@ const { id, label, bg, class: className } = Astro.props;
 
     function open() {
       placeOnTile();
-      dialog.showModal();
+      // на десктопе окно немодальное: фото, ссылки и переключатель режима остаются рабочими
+      if (mobile.matches) dialog.showModal();
+      else dialog.show();
+      closeBtn.focus({ preventScroll: true });
+
       // два кадра, чтобы браузер успел отрисовать стартовую позицию
       requestAnimationFrame(() =>
         requestAnimationFrame(() => {
@@ -188,10 +208,20 @@ const { id, label, bg, class: className } = Astro.props;
     openBtn.addEventListener('click', open);
     closeBtn.addEventListener('click', close);
 
-    // Esc — закрываем с анимацией, а не мгновенно
+    // Esc — закрываем с анимацией. У модального окна это событие cancel…
     dialog.addEventListener('cancel', (e) => {
       e.preventDefault();
       close();
     });
+
+    // …а у немодального Esc ловим сами
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && dialog.open && !dialog.matches(':modal')) close();
+    });
+
+    // при смене режима меняются отступы сетки — догоняем, когда она доанимируется
+    new MutationObserver(() => {
+      if (dialog.classList.contains('is-open')) setTimeout(placeOpen, 520);
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode'] });
   });
 </script>

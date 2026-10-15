@@ -70,9 +70,14 @@ import { copy, principles } from '../content';
     max-width: 44ch;
   }
 
-  @media (max-width: 899px) {
+  @container (max-width: 559px) {
     .principles {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .principles {
       margin-top: 0;
     }
   }

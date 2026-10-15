@@ -75,12 +75,12 @@ import { heart } from '../icons';
       cursor: none !important;
     }
 
-    /* диалог рисуется поверх всего, кружок под ним не видно */
-    :global([data-mode='informal'] dialog *) {
+    /* модальное окно (планшеты) рисуется поверх всего, кружок под ним не видно */
+    :global([data-mode='informal'] dialog:modal *) {
       cursor: auto !important;
     }
 
-    :global([data-mode='informal'] dialog :is(a, button)) {
+    :global([data-mode='informal'] dialog:modal :is(a, button)) {
       cursor: pointer !important;
     }
   }

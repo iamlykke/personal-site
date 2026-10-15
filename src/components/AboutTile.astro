@@ -1,7 +1,11 @@
 ---
 import Expandable from './Expandable.astro';
 import FlagRS from './FlagRS.astro';
-import { copy, about } from '../content';
+import { copy, about, links } from '../content';
+import { hobbyIcons, type HobbyIcon } from '../icons';
+import { Picture } from 'astro:assets';
+
+const resume = links.find((link) => link.label === 'Resume')!;
 ---
 
 <Expandable id="about-dialog" label="About" bg="var(--bg-about)" class="about">
@@ -16,24 +20,107 @@ import { copy, about } from '../content';
   </Fragment>
 
   <div slot="body" class="body">
-    <div class="story">
-      <p>{copy.about}</p>
-      {about.more.map((text) => <p>{text}</p>)}
+    <p class="status">
+      <span class="dot" aria-hidden="true"></span>
+      {about.status}
+    </p>
+
+    <div class="intro">
+      {about.intro.map((text) => <p>{text}</p>)}
     </div>
 
     <dl class="facts">
       {
         about.facts.map((fact) => (
-          <div class:list={{ 'flag-zone': 'flag' in fact }}>
+          <div class:list={{ 'flag-zone': fact.flag }}>
             <dt class="label">{fact.label}</dt>
             <dd>
               {fact.value}
-              {'flag' in fact && <FlagRS />}
+              {fact.flag && <FlagRS />}
             </dd>
           </div>
         ))
       }
     </dl>
+
+    <section class="section">
+      <div class="section-head">
+        <h3 class="label">Experience</h3>
+        <a class="label resume" href={resume.href} target="_blank" rel="noopener">Full resume ↗</a>
+      </div>
+      <ol class="jobs">
+        {
+          about.experience.map((job) => (
+            <li>
+              <span class="years">{job.years}</span>
+              <div>
+                <p class="job-title">
+                  {job.company} <span>· {job.role}</span>
+                </p>
+                <p class="job-text">{job.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h3 class="label">Off the clock</h3>
+      </div>
+      <ul class="hobbies">
+        {
+          about.hobbies.map((hobby, i) => (
+            <li class:list={['hobby', `hobby-${hobby.icon}`]}>
+              <div class="hobby-top">
+                <span class="hobby-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" set:html={hobbyIcons[hobby.icon as HobbyIcon]} />
+                </span>
+                <span class="hobby-num">0{i + 1}</span>
+              </div>
+              <h4>{hobby.title}</h4>
+              <ul class="tags">
+                {hobby.tags.map((tag) =>
+                  typeof tag === 'string' ? (
+                    <li>{tag}</li>
+                  ) : (
+                    <li class="tag-link">
+                      <a href={tag.href} target="_blank" rel="noopener">
+                        {tag.label} ↗
+                      </a>
+                    </li>
+                  ),
+                )}
+              </ul>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="photos-head">
+        <p class="label">Shot by me</p>
+      </div>
+      {/* ширина кадра ∝ его пропорциям — все одной высоты и вместе заполняют ряд */}
+      <ul class="photos">
+        {
+          about.photos.map((photo) => (
+            <li style={`flex-grow: ${(photo.src.width / photo.src.height).toFixed(3)}`}>
+              <figure>
+                <Picture
+                  src={photo.src}
+                  alt={photo.alt}
+                  formats={['avif', 'webp']}
+                  widths={[300, 600]}
+                  sizes="(max-width: 899px) 60vw, 20vw"
+                />
+                <figcaption>{photo.place}</figcaption>
+              </figure>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
   </div>
 </Expandable>
 
@@ -48,49 +135,546 @@ import { copy, about } from '../content';
   }
 
   .body {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 40px;
-    margin-top: auto;
-  }
-
-  .story {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    max-width: 52ch;
+    gap: 40px;
+    padding-bottom: 8px;
+  }
+
+  /* статус — как индикатор «онлайн»: точка мягко пульсирует */
+  .status {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 -16px;
+    padding: 8px 14px 8px 12px;
+    border-radius: 999px;
+    background: rgba(20, 22, 28, 0.06);
+    font: 500 12px/1 var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: oklch(0.68 0.17 150);
+  }
+
+  .dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: inherit;
+    animation: pulse 1.8s ease-out infinite;
+  }
+
+  @keyframes pulse {
+    from {
+      opacity: 0.6;
+      scale: 1;
+    }
+    to {
+      opacity: 0;
+      scale: 2.8;
+    }
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 60ch;
     font-size: clamp(18px, 1.5vw, 22px);
     line-height: 1.45;
   }
 
-  .story p {
+  .intro p {
     margin: 0;
   }
 
+  /* факты — в ряд, переносятся по ширине окна */
   .facts {
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
+    display: grid;
+    /* 4 в ряд или 2×2 — без «хвостов» вроде 3+1 */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px 16px;
   }
 
   .facts div {
-    padding-top: 14px;
+    padding-top: 12px;
     border-top: 1.5px solid currentColor;
   }
 
   dd {
     margin: 6px 0 0;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1.5px solid currentColor;
+  }
+
+  .section-head h3 {
+    margin: 0;
+  }
+
+  .resume {
+    transition: color 0.25s;
+  }
+
+  .resume:hover {
+    color: var(--accent);
+  }
+
+  /* опыт: годы слева, компания и пара строк справа */
+  .jobs {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .jobs li {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 6px 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(20, 22, 28, 0.15);
+  }
+
+  .years {
+    padding-top: 4px;
+    font: 500 12px var(--mono);
+    letter-spacing: 0.06em;
+    color: var(--label);
+  }
+
+  .job-title {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 800;
     letter-spacing: -0.02em;
     text-transform: uppercase;
   }
 
-  @media (max-width: 899px) {
-    .body {
+  .job-title span {
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 16px;
+    color: var(--muted);
+  }
+
+  .job-text {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  /* хобби — 4 карточки 2×2: иконка, название, теги */
+  .hobbies {
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .hobby {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 190px;
+    padding: 18px;
+    border-radius: 14px;
+    background: rgba(20, 22, 28, 0.06);
+    transition:
+      background 0.5s,
+      color 0.5s,
+      translate 0.4s cubic-bezier(0.3, 1.4, 0.5, 1),
+      rotate 0.4s cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
+
+  .hobby-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: auto;
+  }
+
+  .hobby-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 1.5px solid currentColor;
+    border-radius: 50%;
+    /* самолёт улетает за край кружка, а не за край карточки */
+    overflow: hidden;
+  }
+
+  .hobby-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .hobby-num {
+    font: 500 12px var(--mono);
+    letter-spacing: 0.08em;
+    opacity: 0.6;
+  }
+
+  .hobby h4 {
+    margin: 0;
+    font-size: clamp(24px, 2.2vw, 32px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+  }
+
+  .tags {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tags li {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(20, 22, 28, 0.08);
+    font: 500 12px/1 var(--mono);
+  }
+
+  /* тег-ссылка — с обводкой, чтобы отличался от обычных */
+  .tags .tag-link {
+    padding: 0;
+    background: none;
+  }
+
+  .tags a {
+    display: block;
+    padding: 5px 9px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    transition:
+      background 0.25s,
+      color 0.25s;
+  }
+
+  .tags a:hover {
+    background: var(--ink);
+    color: #fff;
+  }
+
+  /* informal: цветные карточки «шахматкой», при наведении карточка подпрыгивает, иконка оживает */
+  :global([data-mode='informal']) .hobby-music {
+    background: var(--yellow);
+  }
+
+  :global([data-mode='informal']) .hobby-camera {
+    background: var(--pink);
+  }
+
+  :global([data-mode='informal']) .hobby-plane {
+    background: var(--mint);
+  }
+
+  :global([data-mode='informal']) .hobby-trophy {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  :global([data-mode='informal']) .hobby-trophy .tags li {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    :global([data-mode='informal']) .hobby:hover {
+      translate: 0 -4px;
+      rotate: -1deg;
+    }
+
+    :global([data-mode='informal']) .hobby:nth-child(even):hover {
+      rotate: 1deg;
+    }
+
+    :global([data-mode='informal']) .hobby-music:hover svg {
+      animation: hop 0.6s ease-in-out infinite alternate;
+    }
+
+    :global([data-mode='informal']) .hobby-camera:hover svg {
+      animation: snap 0.9s ease-out infinite;
+    }
+
+    :global([data-mode='informal']) .hobby-plane:hover svg {
+      animation: fly 1.2s ease-in-out infinite;
+    }
+
+    :global([data-mode='informal']) .hobby-trophy:hover svg {
+      animation: wiggle 0.5s ease-in-out infinite alternate;
+    }
+  }
+
+  /* нота подпрыгивает в такт */
+  @keyframes hop {
+    from {
+      translate: 0 2px;
+      rotate: -6deg;
+    }
+    to {
+      translate: 0 -4px;
+      rotate: 6deg;
+    }
+  }
+
+  /* «щелчок» затвора */
+  @keyframes snap {
+    0%,
+    60%,
+    100% {
+      scale: 1;
+    }
+    70% {
+      scale: 0.75;
+    }
+    80% {
+      scale: 1.15;
+    }
+  }
+
+  /* самолёт улетает за край и прилетает с другой стороны */
+  @keyframes fly {
+    0% {
+      translate: 0 0;
+      opacity: 1;
+    }
+    40% {
+      translate: 18px -18px;
+      opacity: 0;
+    }
+    41% {
+      translate: -18px 18px;
+      opacity: 0;
+    }
+    80%,
+    100% {
+      translate: 0 0;
+      opacity: 1;
+    }
+  }
+
+  /* кубок покачивается */
+  @keyframes wiggle {
+    from {
+      rotate: -14deg;
+    }
+    to {
+      rotate: 14deg;
+    }
+  }
+
+  /* лента своих фото */
+  .photos-head {
+    margin-top: 28px;
+  }
+
+  .photos {
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    gap: 10px;
+  }
+
+  .photos li {
+    flex-basis: 0;
+    min-width: 0;
+  }
+
+  figure {
+    margin: 0;
+    transition:
+      rotate 0.4s cubic-bezier(0.3, 1.4, 0.5, 1),
+      scale 0.4s cubic-bezier(0.3, 1.4, 0.5, 1),
+      padding 0.5s,
+      background 0.5s,
+      box-shadow 0.5s;
+  }
+
+  figure :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    /* иначе браузер начинает перетаскивать саму картинку вместо ленты */
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+
+  figcaption {
+    margin-top: 8px;
+    font: 500 11px var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--label);
+  }
+
+  /* informal: фото как разбросанные отпечатки — белая рамка и наклон, при наведении выпрямляются */
+  :global([data-mode='informal']) figure {
+    padding: 6px 6px 8px;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(20, 22, 28, 0.12);
+  }
+
+  :global([data-mode='informal']) figure :global(img) {
+    border-radius: 3px;
+  }
+
+  :global([data-mode='informal']) figcaption {
+    margin-top: 6px;
+  }
+
+  :global([data-mode='informal']) .photos li:nth-child(5n + 1) figure {
+    rotate: -2.5deg;
+  }
+
+  :global([data-mode='informal']) .photos li:nth-child(5n + 2) figure {
+    rotate: 1.5deg;
+  }
+
+  :global([data-mode='informal']) .photos li:nth-child(5n + 3) figure {
+    rotate: -1deg;
+  }
+
+  :global([data-mode='informal']) .photos li:nth-child(5n + 4) figure {
+    rotate: 2deg;
+  }
+
+  :global([data-mode='informal']) .photos li:nth-child(5n + 5) figure {
+    rotate: -1.5deg;
+  }
+
+  @media (hover: hover) {
+    :global([data-mode='informal']) .photos li:hover figure {
+      position: relative;
+      z-index: 1;
+      rotate: 0deg;
+      scale: 1.06;
+    }
+  }
+
+  @container (max-width: 559px) {
+    /* узко — лента прокручивается вбок (палец или перетаскивание мышью), без полосы прокрутки */
+    .photos {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      padding: 12px 12px 16px;
+      margin-inline: -12px;
+      cursor: grab;
+    }
+
+    .photos::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* пока тянем мышью — без прилипания к кадрам, иначе лента дёргается */
+    .photos.is-dragging {
+      scroll-snap-type: none;
+      cursor: grabbing;
+      user-select: none;
+    }
+
+    .photos li {
+      flex: none !important;
+      scroll-snap-align: start;
+    }
+
+    figure :global(img) {
+      width: auto;
+      height: 220px;
+    }
+
+    .facts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .jobs li {
       grid-template-columns: 1fr;
-      margin-top: 0;
+    }
+  }
+
+  @container (max-width: 419px) {
+    .hobbies {
+      grid-template-columns: 1fr;
     }
   }
 </style>
+
+<script>
+  // лента фото: на телефоне листается пальцем сама, мышью — тянем
+  const strip = document.querySelector<HTMLElement>('.photos');
+
+  if (strip) {
+    let startX = 0;
+    let startScroll = 0;
+    let dragging = false;
+
+    strip.addEventListener('dragstart', (e) => e.preventDefault());
+
+    strip.addEventListener('pointerdown', (e) => {
+      // тач листается нативно; тянем только мышью и только если есть куда
+      if (e.pointerType !== 'mouse' || strip.scrollWidth <= strip.clientWidth) return;
+      dragging = true;
+      startX = e.clientX;
+      startScroll = strip.scrollLeft;
+      strip.classList.add('is-dragging');
+      // захват — чтобы тянуть можно было и за пределами ленты
+      try {
+        strip.setPointerCapture(e.pointerId);
+      } catch {}
+    });
+
+    strip.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      strip.scrollLeft = startScroll - (e.clientX - startX);
+    });
+
+    const stop = () => {
+      if (!dragging) return;
+      dragging = false;
+      // снап возвращается — лента мягко встаёт на ближайший кадр
+      strip.classList.remove('is-dragging');
+    };
+
+    strip.addEventListener('pointerup', stop);
+    strip.addEventListener('pointercancel', stop);
+  }
+</script>

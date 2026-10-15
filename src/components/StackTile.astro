@@ -149,9 +149,20 @@ import { stack, stackGroups } from '../content';
     font-size: 18px;
   }
 
-  @media (max-width: 899px) {
+  @container (max-width: 899px) {
+    .groups {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @container (max-width: 479px) {
     .groups {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .groups {
       margin-top: 0;
     }
   }
