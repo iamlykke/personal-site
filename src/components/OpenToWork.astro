@@ -1,5 +1,5 @@
 ---
-// лента «Open to work» поперёк фото: в Casual — наклеенная жёлтая и бегущая, в Formal — ровная тёмная
+// лента «Open to work» поперёк фото: наклеенная жёлтая и бегущая, только в Casual
 import { links } from '../content';
 
 const email = links.find((link) => link.label === 'Email')!;
@@ -47,11 +47,6 @@ const items = Array.from({ length: 12 }, (_, i) => (i % 2 === 0 ? 'Open to work'
     padding: 0 14px;
   }
 
-  /* ровная лента стоит на месте — отступ слева, чтобы текст не прилипал к краю */
-  :global([data-mode='formal']) .hire-track span:first-child {
-    padding-left: 22px;
-  }
-
   .hire-track span::after {
     content: '·';
     margin-left: 28px;
@@ -60,6 +55,11 @@ const items = Array.from({ length: 12 }, (_, i) => (i % 2 === 0 ? 'Open to work'
   .hire:hover {
     background: var(--accent);
     color: #fff;
+  }
+
+  /* в Formal фото без ленты */
+  :global([data-mode='formal']) .hire {
+    display: none;
   }
 
   /* наклонённой ленте нужен запас по краям, иначе видны её углы */
