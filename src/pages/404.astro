@@ -1,0 +1,334 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../content';
+
+// штрихкод на корешке: ширины полос, просто чтобы выглядело как настоящий
+const bars = [3, 1, 2, 1, 4, 1, 1, 3, 2, 1, 1, 2, 4, 1, 2, 1, 3, 1, 1, 2, 3, 1, 2, 4, 1, 1, 3];
+let x = 0;
+const barcode = bars.map((w, i) => {
+  const bar = { x, w, fill: i % 2 === 0 };
+  x += w;
+  return bar;
+});
+---
+
+<Layout title={`Page not found — ${site.name}`} description="This page doesn’t exist." noindex>
+  <div class="frame">
+    <main class="panel">
+      <div class="ticket">
+        <div class="ticket-main">
+          <p class="label">{site.name} · Live</p>
+          <h1 class="heading code">404</h1>
+          <p class="heading title">This show got cancelled</p>
+
+          <dl class="details">
+            <div>
+              <dt class="label">Venue</dt>
+              <dd data-path>/unknown</dd>
+            </div>
+            <div>
+              <dt class="label">Date</dt>
+              <dd data-date>Today</dd>
+            </div>
+            <div>
+              <dt class="label">Status</dt>
+              <dd>Not found</dd>
+            </div>
+          </dl>
+
+          <a class="home" href="/">Back to the main stage <Icon name="arrow" /></a>
+        </div>
+
+        <!-- пасхалка: корешок можно оторвать -->
+        <div class="stub-slot">
+          <p class="souvenir" aria-live="polite">Keep it.<br />See you at the next show.</p>
+          <button type="button" class="stub" aria-label="Tear off the ticket stub">
+            <span class="tear label" aria-hidden="true">Tear here</span>
+            <span class="admit heading" aria-hidden="true">Admit one</span>
+            <svg class="barcode" viewBox={`0 0 ${x} 10`} preserveAspectRatio="none" aria-hidden="true">
+              {barcode.filter((b) => b.fill).map((b) => <rect x={b.x} width={b.w} height="10" />)}
+            </svg>
+            <span class="label" aria-hidden="true">No. 404</span>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+</Layout>
+
+<script>
+  const path = document.querySelector('[data-path]')!;
+  path.textContent = decodeURI(location.pathname);
+
+  document.querySelector('[data-date]')!.textContent = new Date().toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+
+  const stub = document.querySelector<HTMLButtonElement>('.stub')!;
+  stub.addEventListener(
+    'click',
+    () => {
+      stub.classList.add('torn');
+      stub.disabled = true;
+      document.querySelector('.ticket')!.classList.add('stub-gone');
+    },
+    { once: true },
+  );
+</script>
+
+<style>
+  .frame {
+    height: 100dvh;
+    min-height: 560px;
+    padding: var(--band);
+  }
+
+  .panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 24px;
+    overflow: hidden;
+    border-radius: var(--panel-r);
+    background: var(--panel);
+  }
+
+  .ticket {
+    --ticket: #fff;
+    --stub: #eceef3;
+    --stub-w: 150px;
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--stub-w);
+    width: min(760px, 100%);
+    border-radius: 18px;
+    background: var(--ticket);
+    box-shadow: 0 10px 30px rgba(20, 22, 28, 0.12);
+  }
+
+  :global([data-mode='informal']) .ticket {
+    --ticket: var(--yellow);
+    --stub: var(--pink);
+  }
+
+  /* вырезы по линии отрыва — цветом панели */
+  .ticket::before,
+  .ticket::after {
+    content: '';
+    position: absolute;
+    left: calc(100% - var(--stub-w) - 14px);
+    z-index: 2;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--panel);
+  }
+
+  .ticket::before {
+    top: -14px;
+  }
+
+  .ticket::after {
+    bottom: -14px;
+  }
+
+  .ticket-main {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 36px 40px;
+  }
+
+  .code {
+    font-size: clamp(96px, 14vw, 160px);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+  }
+
+  .title {
+    font-size: clamp(24px, 3vw, 34px);
+  }
+
+  .details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 32px;
+    margin: 18px 0 8px;
+  }
+
+  .details div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  dd {
+    margin: 0;
+    max-width: 24ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font: 500 14px var(--mono);
+  }
+
+  .home {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    gap: 6px;
+    height: 48px;
+    margin-top: 10px;
+    padding: 0 22px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    font: 500 13px/1 var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: background 0.3s;
+  }
+
+  :global([data-mode='informal']) .home:hover {
+    background: var(--accent);
+  }
+
+  /* корешок */
+  .stub-slot {
+    position: relative;
+    display: grid;
+  }
+
+  .souvenir {
+    grid-area: 1 / 1;
+    align-self: center;
+    padding: 20px;
+    font: 500 12px/1.5 var(--mono);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--muted);
+    opacity: 0;
+    transition: opacity 0.4s 0.5s;
+  }
+
+  .stub-gone .souvenir {
+    opacity: 1;
+  }
+
+  .stub {
+    position: relative;
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 28px 16px 24px;
+    border: 0;
+    border-left: 2px dashed rgba(20, 22, 28, 0.3);
+    border-radius: 0 18px 18px 0;
+    background: var(--stub);
+    cursor: pointer;
+    transform-origin: 0 0;
+    transition: rotate 0.3s;
+  }
+
+  .stub:hover {
+    rotate: 2deg;
+  }
+
+  .stub.torn {
+    pointer-events: none;
+    animation: tear 0.9s cubic-bezier(0.5, 0, 0.8, 0.4) forwards;
+  }
+
+  @keyframes tear {
+    20% {
+      rotate: 8deg;
+      translate: 6px 0;
+    }
+    100% {
+      rotate: 28deg;
+      translate: 60px 110vh;
+      opacity: 0.6;
+    }
+  }
+
+  .tear {
+    position: absolute;
+    top: 50%;
+    left: -2px;
+    translate: -50% -50%;
+    rotate: -90deg;
+    padding: 2px 8px;
+    background: var(--stub);
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .admit {
+    writing-mode: vertical-rl;
+    font-size: 30px;
+  }
+
+  .barcode {
+    width: 90px;
+    height: 44px;
+    fill: var(--ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stub.torn {
+      animation: none;
+      opacity: 0;
+    }
+  }
+
+  /* телефон: корешок уходит вниз, линия отрыва горизонтальная */
+  @media (max-width: 599px) {
+    .panel {
+      padding: 16px;
+    }
+
+    .ticket {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ticket::before,
+    .ticket::after {
+      display: none;
+    }
+
+    .ticket-main {
+      padding: 28px 24px;
+    }
+
+    .stub {
+      flex-direction: row;
+      padding: 20px 24px;
+      border-top: 2px dashed rgba(20, 22, 28, 0.3);
+      border-left: 0;
+      border-radius: 0 0 18px 18px;
+    }
+
+    .tear {
+      top: -2px;
+      left: 50%;
+      rotate: 0deg;
+    }
+
+    .admit {
+      writing-mode: horizontal-tb;
+      font-size: 22px;
+    }
+
+    .barcode {
+      width: 70px;
+      height: 32px;
+    }
+  }
+</style>

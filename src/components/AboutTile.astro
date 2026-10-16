@@ -1,6 +1,7 @@
 ---
 import Expandable from './Expandable.astro';
 import Icon from './Icon.astro';
+import ContactCta from './ContactCta.astro';
 import FlagRS from './FlagRS.astro';
 import { copy, about, links } from '../content';
 import { hobbyIcons, type HobbyIcon } from '../icons';
@@ -122,6 +123,8 @@ const resume = links.find((link) => link.label === 'Resume')!;
         }
       </ul>
     </section>
+
+    <ContactCta />
   </div>
 </Expandable>
 

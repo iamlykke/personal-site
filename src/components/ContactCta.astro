@@ -1,0 +1,72 @@
+---
+// в конце раскрытых About и Work: дочитал — сразу понятно, куда идти дальше
+import Icon from './Icon.astro';
+import { links } from '../content';
+
+const email = links.find((link) => link.label === 'Email')!;
+const resume = links.find((link) => link.label === 'Resume')!;
+---
+
+<div class="cta">
+  <p class="heading cta-title">Hiring? Let’s talk.</p>
+  <p class="text">Email is the fastest way to reach me. The resume has the full story.</p>
+  <div class="cta-actions">
+    <!-- клик копирует адрес (copy-email.ts), без буфера откроется почта -->
+    <a class="cta-btn cta-main" href={email.href}>Copy email</a>
+    <a class="cta-btn" href={resume.href} target="_blank" rel="noopener">Resume <Icon name="arrow" /></a>
+  </div>
+</div>
+
+<style>
+  .cta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(20, 22, 28, 0.15);
+  }
+
+  .cta-title {
+    font-size: 32px;
+  }
+
+  .cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 48px;
+    padding: 0 22px;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    font: 500 13px/1 var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition:
+      background 0.3s,
+      color 0.3s,
+      border-color 0.3s;
+  }
+
+  .cta-main {
+    background: var(--ink);
+    color: #fff;
+  }
+
+  .cta-btn:hover {
+    background: var(--ink);
+    color: #fff;
+  }
+
+  :global([data-mode='informal']) .cta-main:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+</style>

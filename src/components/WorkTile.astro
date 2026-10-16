@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import Expandable from './Expandable.astro';
 import Icon from './Icon.astro';
+import ContactCta from './ContactCta.astro';
 import ProjectVideo from './ProjectVideo.astro';
 import { copy, projects, featuredProject } from '../content';
 
@@ -40,52 +41,56 @@ const cardSizes = '(max-width: 899px) 100vw, 60vw';
     <h2 class="heading big">My work</h2>
   </Fragment>
 
-  <ul slot="body" class="projects">
-    {
-      projects.map((p) => {
-        // кликабельно только превью, и только если у проекта есть ссылка
-        const Shot = p.url ? 'a' : 'div';
-        return (
-          <li>
-            <Shot
-              class="project-shot"
-              href={p.url}
-              target={p.url && '_blank'}
-              rel={p.url && 'noopener'}
-              aria-label={p.url && `Open ${p.name}`}
-            >
-              {p.video ? (
-                <ProjectVideo name={p.name} video={p.video} />
-              ) : p.image ? (
-                <Image
-                  src={p.image}
-                  alt={p.url ? '' : `${p.name} website`}
-                  widths={[600, 900, 1200, 1480]}
-                  sizes={cardSizes}
-                  quality={90}
-                />
-              ) : (
-                <div class="placeholder">screenshot · {p.name}</div>
-              )}
-              {p.url && (
-                <span class="open-hint" aria-hidden="true">
-                  Open <Icon name="arrow" />
-                </span>
-              )}
-            </Shot>
-            <div class="project-title">
-              <h3 class="project-name">{p.name}</h3>
-              {p.host && <span class="project-host">{p.host}</span>}
-            </div>
-            <p class="project-desc">{p.description}</p>
-            <ul class="project-stack" aria-label="Stack">
-              {p.stack.map((tech) => <li>{tech}</li>)}
-            </ul>
-          </li>
-        );
-      })
-    }
-  </ul>
+  <Fragment slot="body">
+    <ul class="projects">
+      {
+        projects.map((p) => {
+          // кликабельно только превью, и только если у проекта есть ссылка
+          const Shot = p.url ? 'a' : 'div';
+          return (
+            <li>
+              <Shot
+                class="project-shot"
+                href={p.url}
+                target={p.url && '_blank'}
+                rel={p.url && 'noopener'}
+                aria-label={p.url && `Open ${p.name}`}
+              >
+                {p.video ? (
+                  <ProjectVideo name={p.name} video={p.video} />
+                ) : p.image ? (
+                  <Image
+                    src={p.image}
+                    alt={p.url ? '' : `${p.name} website`}
+                    widths={[600, 900, 1200, 1480]}
+                    sizes={cardSizes}
+                    quality={90}
+                  />
+                ) : (
+                  <div class="placeholder">screenshot · {p.name}</div>
+                )}
+                {p.url && (
+                  <span class="open-hint" aria-hidden="true">
+                    Open <Icon name="arrow" />
+                  </span>
+                )}
+              </Shot>
+              <div class="project-title">
+                <h3 class="project-name">{p.name}</h3>
+                {p.host && <span class="project-host">{p.host}</span>}
+              </div>
+              <p class="project-desc">{p.description}</p>
+              <ul class="project-stack" aria-label="Stack">
+                {p.stack.map((tech) => <li>{tech}</li>)}
+              </ul>
+            </li>
+          );
+        })
+      }
+    </ul>
+
+    <ContactCta />
+  </Fragment>
 </Expandable>
 
 <style>
