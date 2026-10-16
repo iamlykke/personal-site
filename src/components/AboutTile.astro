@@ -13,7 +13,7 @@ const resume = links.find((link) => link.label === 'Resume')!;
 <Expandable id="about-dialog" label="About" bg="var(--bg-about)" class="about">
   <span class="arrow arrow-corner" aria-hidden="true"><Icon name="arrow" /></span>
   <p class="label">About</p>
-  <h1 class="heading">I'm Sergei,<br />a <span class="role">frontend engineer.</span></h1>
+  <h1 class="heading">I'm Sergei,<br />a frontend engineer.</h1>
   <p class="text">{copy.about}</p>
 
   <Fragment slot="head">
@@ -136,21 +136,6 @@ const resume = links.find((link) => link.label === 'Resume')!;
   :global(.about) h1 {
     font-size: var(--fs-about);
     line-height: 0.98;
-  }
-
-  /* «frontend engineer» желтеет целиком при наведении (hover-effects.ts, только Casual).
-     Контур тёмный: жёлтый на белой плитке без него почти не читается */
-  :global(.about h1 .role-char) {
-    -webkit-text-stroke: 3px transparent;
-    paint-order: stroke fill;
-    transition:
-      color 0.3s,
-      -webkit-text-stroke-color 0.3s;
-  }
-
-  :global(.about.is-lit h1 .role-char) {
-    color: var(--yellow);
-    -webkit-text-stroke-color: var(--ink);
   }
 
   .body {

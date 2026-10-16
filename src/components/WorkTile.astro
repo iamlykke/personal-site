@@ -10,10 +10,13 @@ const shotSizes = '(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw';
 // превью в раскрытом списке: на всю ширину окна (~60% экрана на десктопе);
 // у скриншотов мелкий текст, поэтому там quality={90}
 const cardSizes = '(max-width: 899px) 100vw, 60vw';
+// превью на плитке держит пропорции своего кадра — всегда горизонтальное, не вытягивается в высоту
+const featuredMedia = featuredProject.video?.poster ?? featuredProject.image;
+const shotRatio = featuredMedia ? `${featuredMedia.width} / ${featuredMedia.height}` : '16 / 10';
 ---
 
 <Expandable id="work-dialog" label="My work" bg="var(--bg-work)" class="work">
-  <div class:list={['shot', { 'shot-video': featuredProject.video }]}>
+  <div class:list={['shot', { 'shot-video': featuredProject.video }]} style={`aspect-ratio: ${shotRatio}`}>
     {
       featuredProject.video ? (
         <ProjectVideo name={featuredProject.name} video={featuredProject.video} />
@@ -105,9 +108,12 @@ const cardSizes = '(max-width: 899px) 100vw, 60vw';
     border-radius: 8px;
   }
 
+  /* по центру свободного места над заголовком; на низких плитках сжимается по высоте,
+     и видео (object-fit: contain) остаётся целиком */
   .shot {
-    flex: 1;
+    flex: 0 1 auto;
     min-height: 0;
+    margin-block: auto;
   }
 
   /* <Image> и заглушка заполняют контейнер целиком */
