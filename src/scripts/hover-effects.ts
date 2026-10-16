@@ -92,7 +92,7 @@ async function init() {
   syncDrag();
   onModeChange(syncDrag);
 
-  // стрелки ↗ и крестики ✕ тянутся к курсору
+  // стрелки и крестики тянутся к курсору
   function magnet(el: HTMLElement, area: HTMLElement) {
     const toX = gsap.quickTo(el, 'x', { duration: 0.4, ease: 'power3.out' });
     const toY = gsap.quickTo(el, 'y', { duration: 0.4, ease: 'power3.out' });

@@ -1,13 +1,18 @@
-// Клик по Email копирует адрес и показывает «Copied!» над курсором.
+// Клик по Email копирует адрес и показывает над курсором, что именно скопировано.
+// Держим 2 секунды — адрес должен успеть прочитаться.
 // На Windows mailto: часто никуда не ведёт, так что копирование полезнее.
 
-const SHOW_MS = 1200;
+const SHOW_MS = 2000;
 
-function showCopied(x: number, y: number) {
+function showCopied(email: string, x: number, y: number) {
   const tip = document.createElement('div');
   tip.className = 'copied';
   tip.setAttribute('role', 'status');
-  tip.textContent = 'Copied!';
+  // сам адрес — обычными буквами, чтобы его можно было прочитать и переписать
+  const address = document.createElement('span');
+  address.className = 'copied-email';
+  address.textContent = email;
+  tip.append('Copied ', address);
   tip.style.left = `${x}px`;
   tip.style.top = `${y}px`;
   document.body.append(tip);
@@ -31,9 +36,9 @@ document.querySelectorAll<HTMLAnchorElement>('a[href^="mailto:"]').forEach((link
     // с клавиатуры координат курсора нет — показываем над самой ссылкой
     if (e.detail === 0) {
       const rect = link.getBoundingClientRect();
-      showCopied(rect.left + rect.width / 2, rect.top);
+      showCopied(email, rect.left + rect.width / 2, rect.top);
     } else {
-      showCopied(e.clientX, e.clientY);
+      showCopied(email, e.clientX, e.clientY);
     }
   });
 });

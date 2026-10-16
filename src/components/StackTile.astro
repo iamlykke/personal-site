@@ -1,10 +1,11 @@
 ---
 import Expandable from './Expandable.astro';
+import Icon from './Icon.astro';
 import { stack, stackGroups } from '../content';
 ---
 
 <Expandable id="stack-dialog" label="Stack" bg="var(--bg-stack)" class="stack">
-  <span class="arrow arrow-corner" aria-hidden="true">↗</span>
+  <span class="arrow arrow-corner" aria-hidden="true"><Icon name="arrow" /></span>
   <p class="label">Stack</p>
   <h2 class="heading">Tools I ship with.</h2>
   <ul class="chips chips-draggable">

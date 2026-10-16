@@ -1,4 +1,6 @@
 ---
+import Icon from './Icon.astro';
+
 interface Props {
   id: string;
   label: string;
@@ -18,7 +20,7 @@ const { id, label, bg, class: className } = Astro.props;
   <div class="overlay-inner">
     <header>
       <div><slot name="head" /></div>
-      <button type="button" class="close" aria-label="Close">✕</button>
+      <button type="button" class="close" aria-label="Close"><Icon name="close" /></button>
     </header>
     <slot name="body" />
   </div>
@@ -110,6 +112,9 @@ const { id, label, bg, class: className } = Astro.props;
 
   .close {
     flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 48px;
     height: 48px;
     border: 1.5px solid currentColor;
@@ -122,6 +127,16 @@ const { id, label, bg, class: className } = Astro.props;
 
   .close:hover {
     rotate: 90deg;
+  }
+
+  /* без анимации окно встаёт на место сразу, а содержимое коротко проявляется —
+     смена состояния всё равно читается */
+  @media (prefers-reduced-motion: reduce) {
+    .overlay-inner,
+    .is-open .overlay-inner {
+      transition: opacity 0.15s !important;
+      transition-delay: 0s;
+    }
   }
 
   @media (max-width: 899px) {
@@ -146,6 +161,10 @@ const { id, label, bg, class: className } = Astro.props;
   const grid = document.querySelector<HTMLElement>('.grid')!;
   const mobile = matchMedia('(max-width: 899px)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const tiles = document.querySelectorAll<HTMLElement>('[data-expand]');
+
+  // плитки под открытым окном убираем из Tab, иначе фокус уходит под окно и пропадает
+  const setCovered = (covered: boolean) => tiles.forEach((tile) => (tile.inert = covered));
 
   type Rect = { top: number; left: number; width: number; height: number };
 
@@ -160,7 +179,7 @@ const { id, label, bg, class: className } = Astro.props;
     return { top: rect.top + pad, left, width: rect.right - pad - left, height: rect.height - pad * 2 };
   }
 
-  document.querySelectorAll<HTMLElement>('[data-expand]').forEach((tile) => {
+  tiles.forEach((tile) => {
     const dialog = document.getElementById(tile.dataset.expand!) as HTMLDialogElement;
     const openBtn = tile.querySelector<HTMLButtonElement>('.open')!;
     const closeBtn = dialog.querySelector<HTMLButtonElement>('.close')!;
@@ -190,6 +209,7 @@ const { id, label, bg, class: className } = Astro.props;
       // на десктопе окно немодальное: фото, ссылки и переключатель режима остаются рабочими
       if (mobile.matches) dialog.showModal();
       else dialog.show();
+      setCovered(true);
       closeBtn.focus({ preventScroll: true });
 
       // два кадра, чтобы браузер успел отрисовать стартовую позицию
@@ -210,10 +230,11 @@ const { id, label, bg, class: className } = Astro.props;
       setTimeout(
         () => {
           dialog.close();
+          setCovered(false);
           openBtn.focus();
         },
-        // совпадает с --dur в CSS
-        reduced.matches ? 0 : mobile.matches ? 450 : 600,
+        // совпадает с --dur в CSS (при reduced motion — с fade содержимого)
+        reduced.matches ? 150 : mobile.matches ? 450 : 600,
       );
     }
 

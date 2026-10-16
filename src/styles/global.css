@@ -5,6 +5,10 @@
   --pink: oklch(0.8 0.12 350);
   --mint: oklch(0.88 0.1 165);
   --lavender: oklch(0.84 0.08 285);
+  /* рамка фокуса; в Casual тёмная — синяя теряется на пастельных плитках */
+  --focus: var(--accent);
+  /* пружинка с перелётом — только в Casual, в Formal обычное плавное торможение */
+  --spring: cubic-bezier(0.2, 0.8, 0.2, 1);
   --band: 28px;
   --panel-r: 18px;
 
@@ -24,7 +28,7 @@
   /* скругление раскрытой плитки, когда она занимает правые колонки */
   --area-r: var(--r);
   --muted: #555963;
-  --label: #6b6f7a;
+  --label: #5f636c;
   --bg-photo: #d9dce4;
   --bg-work: #eceef3;
   --bg-approach: #eceef3;
@@ -37,10 +41,12 @@
   --panel: #eceef3;
   --gap: 0px;
   --r: 0px;
+  --focus: var(--ink);
+  --spring: cubic-bezier(0.3, 1.4, 0.5, 1);
   /* плитки стык в стык — справа повторяем скругление панели */
   --area-r: 0 var(--panel-r) var(--panel-r) 0;
   --muted: #3b3e47;
-  --label: #4a4d57;
+  --label: #42454e;
   --bg-photo: #d3d7e0;
   /* цвета расставлены «шахматкой» по позициям в сетке, а не по смыслу плиток */
   --bg-about: #ffffff;
@@ -111,8 +117,21 @@ img {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--focus);
   outline-offset: 3px;
+}
+
+/* иконки из icons.ts (компонент Icon) — размером с текст рядом */
+.icon {
+  flex: none;
+  width: 1em;
+  height: 1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -0.125em;
 }
 
 .tile {
@@ -316,7 +335,7 @@ img {
   scale: 0.6;
   transition:
     opacity 0.3s,
-    scale 0.4s cubic-bezier(0.3, 1.4, 0.5, 1);
+    scale 0.4s var(--spring);
 }
 
 .likes svg {
@@ -356,7 +375,13 @@ img {
   pointer-events: none;
   translate: -50% calc(-100% - 14px);
   opacity: 0;
-  animation: copied 1.2s cubic-bezier(0.3, 1.4, 0.5, 1) forwards;
+  animation: copied 2s var(--spring) forwards;
+}
+
+.copied-email {
+  margin-left: 4px;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 @keyframes copied {

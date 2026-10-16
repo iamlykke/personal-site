@@ -14,3 +14,11 @@ export const hobbyIcons = {
 };
 
 export type HobbyIcon = keyof typeof hobbyIcons;
+
+// стрелка и крестик из Lucide (ISC), viewBox 0 0 24 24, рисуются stroke
+export const uiIcons = {
+  arrow: '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
+  close: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+};
+
+export type UiIcon = keyof typeof uiIcons;

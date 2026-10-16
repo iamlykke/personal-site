@@ -49,6 +49,20 @@
       color 0.3s;
   }
 
+  /* на тач-экранах зона нажатия 44px, сама кнопка выглядит так же */
+  @media (pointer: coarse) {
+    button {
+      position: relative;
+      min-width: 44px;
+    }
+
+    button::after {
+      content: '';
+      position: absolute;
+      inset: -6px 0;
+    }
+  }
+
   svg {
     flex: none;
     width: 17px;
@@ -70,7 +84,7 @@
     letter-spacing: 0.06em;
     text-transform: uppercase;
     transition:
-      max-width 0.4s cubic-bezier(0.3, 1.2, 0.5, 1),
+      max-width 0.4s var(--spring),
       margin 0.4s,
       opacity 0.3s;
   }

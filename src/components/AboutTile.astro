@@ -1,5 +1,6 @@
 ---
 import Expandable from './Expandable.astro';
+import Icon from './Icon.astro';
 import FlagRS from './FlagRS.astro';
 import { copy, about, links } from '../content';
 import { hobbyIcons, type HobbyIcon } from '../icons';
@@ -9,7 +10,7 @@ const resume = links.find((link) => link.label === 'Resume')!;
 ---
 
 <Expandable id="about-dialog" label="About" bg="var(--bg-about)" class="about">
-  <span class="arrow arrow-corner" aria-hidden="true">↗</span>
+  <span class="arrow arrow-corner" aria-hidden="true"><Icon name="arrow" /></span>
   <p class="label">About</p>
   <h1 class="heading">I'm Sergei,<br />a frontend engineer.</h1>
   <p class="text">{copy.about}</p>
@@ -46,7 +47,7 @@ const resume = links.find((link) => link.label === 'Resume')!;
     <section class="section">
       <div class="section-head">
         <h3 class="label">Experience</h3>
-        <a class="label resume" href={resume.href} target="_blank" rel="noopener">Full resume ↗</a>
+        <a class="label resume" href={resume.href} target="_blank" rel="noopener">Full resume <Icon name="arrow" /></a>
       </div>
       <ol class="jobs">
         {
@@ -87,7 +88,7 @@ const resume = links.find((link) => link.label === 'Resume')!;
                   ) : (
                     <li class="tag-link">
                       <a href={tag.href} target="_blank" rel="noopener">
-                        {tag.label} ↗
+                        {tag.label} <Icon name="arrow" />
                       </a>
                     </li>
                   ),
@@ -306,8 +307,8 @@ const resume = links.find((link) => link.label === 'Resume')!;
     transition:
       background 0.5s,
       color 0.5s,
-      translate 0.4s cubic-bezier(0.3, 1.4, 0.5, 1),
-      rotate 0.4s cubic-bezier(0.3, 1.4, 0.5, 1);
+      translate 0.4s var(--spring),
+      rotate 0.4s var(--spring);
   }
 
   .hobby-top {
@@ -514,8 +515,8 @@ const resume = links.find((link) => link.label === 'Resume')!;
   figure {
     margin: 0;
     transition:
-      rotate 0.4s cubic-bezier(0.3, 1.4, 0.5, 1),
-      scale 0.4s cubic-bezier(0.3, 1.4, 0.5, 1),
+      rotate 0.4s var(--spring),
+      scale 0.4s var(--spring),
       padding 0.5s,
       background 0.5s,
       box-shadow 0.5s;

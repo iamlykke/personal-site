@@ -1,10 +1,11 @@
 ---
 import Expandable from './Expandable.astro';
+import Icon from './Icon.astro';
 import { copy, principles } from '../content';
 ---
 
 <Expandable id="approach-dialog" label="Approach" bg="var(--bg-approach)" class="approach">
-  <span class="arrow arrow-corner" aria-hidden="true">↗</span>
+  <span class="arrow arrow-corner" aria-hidden="true"><Icon name="arrow" /></span>
   <p class="label">Approach</p>
   <h2 class="heading">How I build</h2>
   <p class="text">{copy.approach}</p>
