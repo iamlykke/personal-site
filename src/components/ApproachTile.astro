@@ -7,7 +7,7 @@ import { copy, principles } from '../content';
 <Expandable id="approach-dialog" label="Approach" bg="var(--bg-approach)" class="approach">
   <span class="arrow arrow-corner" aria-hidden="true"><Icon name="arrow" /></span>
   <p class="label">Approach</p>
-  <h2 class="heading">How I build</h2>
+  <h2 class="heading"><span class="scribble">How I build</span></h2>
   <p class="text">{copy.approach}</p>
 
   <Fragment slot="head">
@@ -29,6 +29,42 @@ import { copy, principles } from '../content';
 </Expandable>
 
 <style>
+  /* подчёркивание маркером под «How I build» — только в Casual.
+     На ::after, а не отдельным svg: SplitText из hover-effects режет заголовок на буквы и псевдоэлемент не трогает */
+  .scribble {
+    position: relative;
+    white-space: nowrap;
+    /* своя стопка слоёв: линия уходит под буквы, но не под фон плитки */
+    isolation: isolate;
+  }
+
+  /* жирный штрих маркером: пропорции viewBox близки к размеру слова, поэтому толщина почти не искажается */
+  .scribble::after {
+    content: '';
+    position: absolute;
+    left: -4%;
+    right: -4%;
+    bottom: -0.08em;
+    z-index: -1;
+    height: 0.42em;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 20' preserveAspectRatio='none'%3E%3Cpath d='M7 12C70 8 150 7 228 8.5S298 11 313 7.5' fill='none' stroke='%233665e4' stroke-width='12' stroke-linecap='round' stroke-opacity='0.9'/%3E%3C/svg%3E")
+      center / 100% 100% no-repeat;
+    pointer-events: none;
+    /* «рисуем» слева направо: открываем линию маской */
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0.5s cubic-bezier(0.6, 0, 0.2, 1);
+  }
+
+  :global([data-mode='formal']) .scribble::after {
+    display: none;
+  }
+
+  :global(.approach:hover) .scribble::after,
+  :global(.approach:has(.open:focus-visible)) .scribble::after,
+  .scribble.is-drawn::after {
+    clip-path: inset(0 0 0 0);
+  }
+
   :global(.approach) {
     background: var(--bg-approach);
   }
@@ -83,3 +119,19 @@ import { copy, principles } from '../content';
     }
   }
 </style>
+
+<script>
+  // на тач-экранах наведения нет — подчёркивание прорисуется само, когда плитка покажется
+  const scribble = document.querySelector('.approach .scribble');
+  if (scribble && matchMedia('(hover: none)').matches) {
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        scribble.classList.add('is-drawn');
+        io.disconnect();
+      },
+      { threshold: 1 },
+    );
+    io.observe(scribble);
+  }
+</script>

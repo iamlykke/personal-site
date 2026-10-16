@@ -34,17 +34,29 @@ async function init() {
   });
 
   // слова разъезжаются и держатся, пока курсор на плитке; потом пружинят обратно
-  const words = SplitText.create(q('.about h1'), { type: 'words' }).words;
-  effects.set(q('.about'), {
-    enter: () =>
+  const aboutTile = q('.about');
+  const aboutSplit = SplitText.create(q('.about h1'), { type: 'words, chars' });
+  const words = aboutSplit.words;
+  // буквы «frontend engineer» желтеют при наведении (цвета — в AboutTile.astro)
+  aboutSplit.chars
+    // точка внутри .role, чтобы SplitText не оторвал её от слова, но сама не красится
+    .filter((char) => char.closest('.role') && char.textContent !== '.')
+    .forEach((char) => char.classList.add('role-char'));
+  effects.set(aboutTile, {
+    enter: () => {
+      aboutTile.classList.add('is-lit');
       gsap.to(words, {
         rotate: () => gsap.utils.random(-7, 7),
         y: () => gsap.utils.random(-5, 5),
         duration: 0.4,
         stagger: 0.04,
         ease: 'back.out(3)',
-      }),
-    leave: () => gsap.to(words, { rotate: 0, y: 0, duration: 0.8, ease: 'elastic.out(1, 0.5)' }),
+      });
+    },
+    leave: () => {
+      aboutTile.classList.remove('is-lit');
+      gsap.to(words, { rotate: 0, y: 0, duration: 0.8, ease: 'elastic.out(1, 0.5)' });
+    },
   });
 
   // чипы раскидываются как наклейки (цвета — в StackTile.astro)

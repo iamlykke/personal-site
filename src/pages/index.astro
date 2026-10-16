@@ -7,8 +7,12 @@ import AboutTile from '../components/AboutTile.astro';
 import StackTile from '../components/StackTile.astro';
 import Marquee from '../components/Marquee.astro';
 import Cursor from '../components/Cursor.astro';
+import OpenToWork from '../components/OpenToWork.astro';
 import { site, links } from '../content';
 import { heart } from '../icons';
+import { Picture } from 'astro:assets';
+import portraitFormal from '../assets/photos/portrait-formal.jpg';
+import portraitInformal from '../assets/photos/portrait-informal.jpg';
 ---
 
 <Layout title={site.title} description={site.description}>
@@ -18,10 +22,28 @@ import { heart } from '../icons';
     <main class="panel">
       <div class="grid">
         <section class="tile photo" aria-label="Photo">
-          <!-- TODO: фото для обоих режимов -->
-          <div class="portrait portrait-formal">portrait · formal</div>
-          <div class="portrait portrait-informal">portrait · colour, candid</div>
+          <!-- оба фото в DOM, режим только меняет прозрачность; alt у одного, чтобы скринридер не читал дважды -->
+          <Picture
+            class="portrait portrait-formal"
+            src={portraitFormal}
+            alt=""
+            formats={['avif', 'webp']}
+            widths={[400, 800, 1200]}
+            sizes="(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw"
+            loading="eager"
+          />
+          <Picture
+            class="portrait portrait-informal"
+            src={portraitInformal}
+            alt="Sergei Usachev"
+            formats={['avif', 'webp']}
+            widths={[400, 800, 1200]}
+            sizes="(max-width: 599px) 100vw, (max-width: 899px) 50vw, 33vw"
+            loading="eager"
+            fetchpriority="high"
+          />
           <ModeToggle />
+          <OpenToWork />
           <div class="likes" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d={heart}></path></svg>
             <span>0</span>
@@ -31,7 +53,8 @@ import { heart } from '../icons';
         <AboutTile />
         <WorkTile />
 
-        <nav class="tile links" aria-label="Links">
+        <nav class="tile links" aria-label="Contacts">
+          <p class="label">Contacts</p>
           <ul>
             {
               links.map((link) => (
@@ -116,6 +139,19 @@ import { heart } from '../icons';
     text-transform: uppercase;
     color: rgba(20, 22, 28, 0.6);
     transition: opacity 0.5s;
+  }
+
+  /* фото вместо заглушки: лицо чуть выше середины кадра, плитка шире кадра — режем сверху и снизу */
+  img.portrait {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    object-fit: cover;
+    object-position: 50% 35%;
+  }
+
+  img.portrait-informal {
+    object-position: 50% 40%;
   }
 
   .portrait-informal,

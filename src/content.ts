@@ -18,13 +18,14 @@ export const site = {
   country: 'Serbia',
 };
 
+// сначала то, что нужно для найма, личное — в конце
 export const links = [
-  { label: 'GitHub', href: 'https://github.com/iamlykke' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/sergeiusachev/' },
-  { label: 'Telegram', href: 'https://t.me/iamlykke' },
-  { label: 'Email', href: 'mailto:usachev97@gmail.com' },
-  { label: 'Instagram', href: 'https://www.instagram.com/sergeiusachev/' },
   { label: 'Resume', href: '/sergei-usachev-cv.pdf' },
+  { label: 'Email', href: 'mailto:usachev97@gmail.com' },
+  { label: 'GitHub', href: 'https://github.com/iamlykke' },
+  { label: 'Telegram', href: 'https://t.me/iamlykke' },
+  { label: 'Instagram', href: 'https://www.instagram.com/sergeiusachev/' },
 ] as const;
 
 export const stackGroups = [

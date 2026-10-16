@@ -47,7 +47,7 @@ function like(x: number, y: number) {
 }
 
 photo.addEventListener('pointerup', (e) => {
-  if (!isInformal() || (e.target instanceof Element && e.target.closest('.toggle'))) return;
+  if (!isInformal() || (e.target instanceof Element && e.target.closest('.toggle, .hire'))) return;
 
   if (e.timeStamp - lastTap < DOUBLE_TAP_MS) {
     like(e.clientX, e.clientY);

@@ -1,0 +1,102 @@
+---
+// лента «Open to work» поперёк фото: в Casual — наклеенная жёлтая и бегущая, в Formal — ровная тёмная
+import { links } from '../content';
+
+const email = links.find((link) => link.label === 'Email')!;
+// две одинаковые половины — сдвигаем на -50%, и лента идёт без шва
+const items = Array.from({ length: 12 }, (_, i) => (i % 2 === 0 ? 'Open to work' : 'Hire me'));
+---
+
+<!-- клик копирует адрес (copy-email.ts), без буфера откроется почта -->
+<a class="hire" href={email.href} aria-label="Open to work. Copy my email">
+  <span class="hire-track" aria-hidden="true">
+    {items.map((item) => <span>{item}</span>)}
+  </span>
+</a>
+
+<style>
+  .hire {
+    position: absolute;
+    left: 0;
+    right: 0;
+    /* у самого низа фото — так лента не закрывает лицо даже на низких широких плитках */
+    bottom: 22px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    height: 44px;
+    overflow: hidden;
+    background: var(--ink);
+    color: #fff;
+    font: 500 13px/1 var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition:
+      background 0.4s,
+      color 0.4s,
+      rotate 0.5s;
+  }
+
+  .hire-track {
+    display: flex;
+    flex: none;
+    white-space: nowrap;
+  }
+
+  .hire-track span {
+    padding: 0 14px;
+  }
+
+  /* ровная лента стоит на месте — отступ слева, чтобы текст не прилипал к краю */
+  :global([data-mode='formal']) .hire-track span:first-child {
+    padding-left: 22px;
+  }
+
+  .hire-track span::after {
+    content: '·';
+    margin-left: 28px;
+  }
+
+  .hire:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* наклонённой ленте нужен запас по краям, иначе видны её углы */
+  :global([data-mode='informal']) .hire {
+    left: -24px;
+    right: -24px;
+    /* наклон поднимает правый край — чуть выше, чтобы левый не уходил за плитку */
+    bottom: 34px;
+    rotate: -4deg;
+    background: var(--yellow);
+    color: var(--ink);
+    box-shadow: 0 2px 8px rgba(20, 22, 28, 0.15);
+  }
+
+  :global([data-mode='informal']) .hire:hover {
+    rotate: -2deg;
+    background: var(--accent);
+    color: #fff;
+  }
+
+  :global([data-mode='informal']) .hire-track {
+    animation: hire-scroll 24s linear infinite;
+  }
+
+  .hire:hover .hire-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes hire-scroll {
+    to {
+      translate: -50% 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global([data-mode='informal']) .hire-track {
+      animation: none;
+    }
+  }
+</style>
