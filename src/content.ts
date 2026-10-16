@@ -13,7 +13,7 @@ export const site = {
   name: 'Sergei Usachev',
   title: 'Sergei Usachev — Frontend Engineer',
   description:
-    'Frontend engineer based in Serbia. I build fast, accessible interfaces with React and TypeScript — from landing pages to product apps.',
+    'Frontend engineer based in Serbia. 5.5+ years building websites and web apps with React, Next.js and TypeScript.',
   jobTitle: 'Frontend Engineer',
   country: 'Serbia',
 };
@@ -39,26 +39,26 @@ export const stack = stackGroups.flatMap((group) => group.items);
 export const principles = [
   {
     title: 'Readable over clever',
-    text: 'Code is read far more often than it is written. Clear names and small components beat smart tricks.',
+    text: 'Someone will read this code after me, often me a year later. Clear names and small components help them more than smart tricks.',
   },
   {
     title: 'Typed end to end',
-    text: 'TypeScript from the API layer to the UI, so refactoring stays boring and safe.',
+    text: 'TypeScript from the API layer to the UI, so the compiler catches most of what a refactor breaks.',
   },
   {
     title: 'State where it belongs',
     text: 'Server state in React Query, UI state next to the component that uses it, a global store only when it pays off.',
   },
   {
-    title: 'Performance is a feature',
-    text: 'Budgets, lazy loading and Core Web Vitals are checked from the first commit — not patched before release.',
+    title: 'Fast from day one',
+    text: 'I set a performance budget and watch Core Web Vitals from the first commit. Speeding a site up the week before release is always harder.',
   },
 ] as const;
 
 export const about = {
   intro: [
-    'Frontend developer with 5.5+ years of commercial experience in React, Next.js and TypeScript. I’m equally happy building something from scratch and bringing order to an inherited codebase.',
-    'I care about the details people feel but rarely notice: a fast first paint, smooth interactions, keyboard support and layouts that hold up on any screen.',
+    'I’m a frontend developer with 5.5+ years of commercial experience in React, Next.js and TypeScript. I’ve started projects from an empty repo and taken over old codebases that needed cleaning up, and I like both.',
+    'What I pay attention to: pages that load fast, animations that don’t stutter, forms that work from the keyboard and layouts that don’t break on a small phone.',
   ],
   status: 'Open to new opportunities',
   facts: [
@@ -150,10 +150,10 @@ export const projects: Project[] = [
 export const featuredProject = projects[0];
 
 export const copy = {
-  work: 'Three production builds — two React + Vite landings and a Next.js archive of every concert I’ve been to.',
+  work: 'Websites for Space307 and Place.01, plus a Next.js archive of every concert I’ve been to.',
   approach:
-    'Readable over clever. Typed end to end, state kept where it belongs, and performance treated as a feature — not a phase.',
+    'Simple code over clever code, TypeScript everywhere, state kept next to where it’s used and speed checked from the first commit.',
   about:
-    'Based in Serbia. I build fast, accessible interfaces with React and TypeScript — from landing pages to product apps.',
+    'Based in Serbia. I’ve been building websites and web apps with React and TypeScript for 5.5+ years.',
   marquee: 'OPEN TO NEW OPPORTUNITIES',
 };
