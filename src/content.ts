@@ -3,6 +3,8 @@ import space307 from './assets/projects/space307.png';
 import space307Poster from './assets/projects/space307-poster.jpg';
 import place01Poster from './assets/projects/place01-poster.jpg';
 import concertsArchive from './assets/projects/concerts-archive.png';
+import space307Portal from './assets/projects/space307-portal.png';
+import axisHrm from './assets/projects/axis-hrm.png';
 import photoKotor from './assets/photos/kotor.jpg';
 import photoBench from './assets/photos/novi-sad-bench.jpg';
 import photoFortress from './assets/photos/novi-sad-fortress.jpg';
@@ -136,6 +138,25 @@ export const projects: Project[] = [
     url: 'https://place01.ru/',
     video: { src: '/video/place01.mp4', poster: place01Poster, bg: '#e3e2e1' },
   },
+  // внутренние проекты: публичной версии нет, ссылка ведёт на кейс в Behance
+  {
+    name: 'Axis HRM',
+    description:
+      'Internal HR system for Space307 that I built from scratch: employee records, teams, contracts and analytics dashboards.\nInternal tool, so the link goes to the design case on Behance.',
+    stack: ['Symfony', 'React', 'TypeScript', 'Zustand', 'React Query', 'CSS Modules'],
+    host: 'behance.net',
+    url: 'https://www.behance.net/gallery/225326055/Axis-HRM',
+    image: axisHrm,
+  },
+  {
+    name: 'Space307 Portal',
+    description:
+      'Internal portal for Space307 employees: profiles, teams and org chart, office maps and a merch shop paid with achievement points.\nInternal tool, so the link goes to the design case on Behance.',
+    stack: ['Symfony', 'React', 'TypeScript', 'MobX', 'React Query', 'CSS Modules'],
+    host: 'behance.net',
+    url: 'https://www.behance.net/gallery/214946281/Space307-Portal',
+    image: space307Portal,
+  },
   {
     name: 'Concerts Archive',
     description:
@@ -151,7 +172,7 @@ export const projects: Project[] = [
 export const featuredProject = projects[0];
 
 export const copy = {
-  work: 'Websites for Space307 and Place.01, plus a Next.js archive of every concert I’ve been to.',
+  work: 'Websites for Space307 and Place.01, internal HR system and employee portal, plus a Next.js archive of every concert I’ve been to.',
   approach:
     'Simple code over clever code, TypeScript everywhere, state kept next to where it’s used and speed checked from the first commit.',
   about:
