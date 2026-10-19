@@ -89,7 +89,13 @@ export const about = {
     {
       title: 'Music',
       icon: 'music',
-      tags: ['Listening', 'Guitar', 'Drums', { label: 'Concerts', href: 'https://my-blog-blond-omega.vercel.app/' }],
+      tags: [
+        'Listening',
+        'Guitar',
+        'Drums',
+        { label: 'Concerts', href: 'https://my-blog-blond-omega.vercel.app/' },
+        { label: 'Vinyl collecting', href: 'https://roundnsquare.club/lykke/has' },
+      ],
     },
     { title: 'Photography', icon: 'camera', tags: ['Fujifilm X-T30', 'Phone'] },
     { title: 'Travel', icon: 'plane', tags: ['New cities', 'Concert trips'] },
