@@ -24,7 +24,7 @@ export const site = {
 export const links = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/sergeiusachev/' },
   { label: 'Resume', href: '/sergei-usachev-cv.pdf' },
-  { label: 'Email', href: 'mailto:usachev97@gmail.com' },
+  { label: 'Email', href: 'mailto:usachev.frontend@gmail.com' },
   { label: 'GitHub', href: 'https://github.com/iamlykke' },
   { label: 'Telegram', href: 'https://t.me/iamlykke' },
   { label: 'Instagram', href: 'https://www.instagram.com/sergeiusachev/' },
