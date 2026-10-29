@@ -1,7 +1,7 @@
 ---
 import Expandable from './Expandable.astro';
 import Icon from './Icon.astro';
-import { stack, stackGroups } from '../content';
+import { stack, stackGroups, stackPreview } from '../content';
 ---
 
 <Expandable id="stack-dialog" label="Stack" bg="var(--bg-stack)" class="stack">
@@ -10,7 +10,7 @@ import { stack, stackGroups } from '../content';
   <h2 class="heading">Tools I ship with</h2>
   <ul class="chips chips-draggable">
     {
-      stack.map((name, i) => (
+      stackPreview.map((name, i) => (
         <li>
           <span class="chip" style={`--i: ${i}`}>
             {name}
@@ -128,7 +128,7 @@ import { stack, stackGroups } from '../content';
 
   .groups {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 32px;
     margin-top: auto;
   }

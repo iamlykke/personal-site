@@ -13,10 +13,10 @@ import photoGenex from './assets/photos/belgrade-genex.jpg';
 
 export const site = {
   name: 'Sergei Usachev',
-  title: 'Sergei Usachev — Frontend Engineer',
+  title: 'Sergei Usachev — Full-Stack Developer',
   description:
-    'Frontend engineer based in Serbia. 5.5+ years building websites and web apps with React, Next.js and TypeScript.',
-  jobTitle: 'Frontend Engineer',
+    'Full-stack developer with a frontend focus, based in Serbia. 5.5+ years building websites and web apps with React, Next.js, TypeScript and Node.js.',
+  jobTitle: 'Full-Stack Developer',
   country: 'Serbia',
 };
 
@@ -31,13 +31,34 @@ export const links = [
 ] as const;
 
 export const stackGroups = [
-  { title: 'Core', items: ['React', 'TypeScript', 'Next.js', 'Astro'] },
-  { title: 'State & data', items: ['Zustand', 'MobX', 'React Query'] },
-  { title: 'Tooling', items: ['Vite', 'Node.js', 'Jest', 'Figma'] },
-  { title: 'Styling', items: ['Tailwind'] },
+  { title: 'Core', items: ['React', 'TypeScript', 'JavaScript', 'Next.js', 'Astro', 'HTML', 'CSS'] },
+  {
+    title: 'State & data',
+    items: ['Redux', 'Redux Toolkit', 'Zustand', 'MobX', 'React Query', 'RxJS', 'Redux-Observable'],
+  },
+  { title: 'Backend', items: ['Node.js', 'PostgreSQL', 'Prisma', 'NestJS', 'REST APIs'] },
+  { title: 'Testing', items: ['Jest', 'React Testing Library', 'Playwright'] },
+  { title: 'Tooling', items: ['Vite', 'Webpack', 'Git', 'Docker', 'Figma', 'i18next', 'Feature-Sliced Design'] },
+  { title: 'Styling', items: ['Tailwind', 'SCSS', 'CSS Modules', 'Ant Design'] },
 ] as const;
 
 export const stack = stackGroups.flatMap((group) => group.items);
+
+// на свёрнутой плитке — только главное, весь стек влезает лишь в раскрытую
+export const stackPreview = [
+  'React',
+  'TypeScript',
+  'Next.js',
+  'Node.js',
+  'Redux Toolkit',
+  'Zustand',
+  'React Query',
+  'PostgreSQL',
+  'Jest',
+  'Playwright',
+  'Tailwind',
+  'Vite',
+] as const satisfies readonly (typeof stack)[number][];
 
 export const principles = [
   {
@@ -60,7 +81,7 @@ export const principles = [
 
 export const about = {
   intro: [
-    'I’m a frontend developer with 5.5+ years of commercial experience in React, Next.js and TypeScript. I’ve started projects from an empty repo and taken over old codebases that needed cleaning up, and I like both.',
+    'I’m a full-stack developer with a frontend focus and 5.5+ years of commercial experience in React, Next.js, TypeScript and Node.js. I build products end to end, from the API and database to the UI. I’ve started projects from an empty repo and taken over old codebases that needed cleaning up, and I like both.',
     'What I pay attention to: pages that load fast, animations that don’t stutter, forms that work from the keyboard and layouts that don’t break on a small phone.',
   ],
   status: 'Open to new opportunities',
@@ -74,8 +95,8 @@ export const about = {
     {
       years: '2022 — 2026',
       company: 'Space307',
-      role: 'Frontend Developer',
-      text: 'Built an internal HR system from scratch, led the page-by-page migration from Symfony to React and turned an internal CRM into a template adopted by 7 teams.',
+      role: 'Full-Stack Developer',
+      text: 'Built an internal HR system from scratch, shipped full-stack Next.js apps with PostgreSQL and Prisma, led the page-by-page migration from Symfony to React and turned an internal CRM into a template adopted by 7 teams.',
     },
     {
       years: '2021 — 2022',
@@ -182,6 +203,6 @@ export const copy = {
   approach:
     'Simple code over clever code, TypeScript everywhere, state kept next to where it’s used and speed checked from the first commit.',
   about:
-    'Based in Serbia. I’ve been building websites and web apps with React and TypeScript for 5.5+ years.',
+    'Based in Serbia. I’ve been building websites and web apps with React, Next.js and TypeScript for 5.5+ years, frontend and backend.',
   marquee: 'OPEN TO NEW OPPORTUNITIES',
 };

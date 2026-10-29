@@ -1,5 +1,5 @@
 <a href="https://personal-site-ashen-one.vercel.app">
-  <img src="public/og.png" alt="Sergei Usachev — Frontend Engineer" width="100%">
+  <img src="public/og.png" alt="Sergei Usachev — Full-Stack Developer" width="100%">
 </a>
 
 <h1 align="center">Sergei Usachev — personal site</h1>
