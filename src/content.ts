@@ -13,7 +13,7 @@ import photoGenex from './assets/photos/belgrade-genex.jpg';
 
 export const site = {
   name: 'Sergei Usachev',
-  title: 'Sergei Usachev — Full-Stack Developer',
+  title: 'Sergei Usachev - Full-Stack Developer',
   description:
     'Full-stack developer with a frontend focus, based in Serbia. 5.5+ years building websites and web apps with React, Next.js, TypeScript and Node.js.',
   jobTitle: 'Full-Stack Developer',
@@ -31,34 +31,13 @@ export const links = [
 ] as const;
 
 export const stackGroups = [
-  { title: 'Core', items: ['React', 'TypeScript', 'JavaScript', 'Next.js', 'Astro', 'HTML', 'CSS'] },
-  {
-    title: 'State & data',
-    items: ['Redux', 'Redux Toolkit', 'Zustand', 'MobX', 'React Query', 'RxJS', 'Redux-Observable'],
-  },
-  { title: 'Backend', items: ['Node.js', 'PostgreSQL', 'Prisma', 'NestJS', 'REST APIs'] },
-  { title: 'Testing', items: ['Jest', 'React Testing Library', 'Playwright'] },
-  { title: 'Tooling', items: ['Vite', 'Webpack', 'Git', 'Docker', 'Figma', 'i18next', 'Feature-Sliced Design'] },
-  { title: 'Styling', items: ['Tailwind', 'SCSS', 'CSS Modules', 'Ant Design'] },
+  { title: 'Core', items: ['React', 'TypeScript', 'Next.js', 'Astro'] },
+  { title: 'State & data', items: ['Zustand', 'MobX', 'React Query'] },
+  { title: 'Tooling', items: ['Vite', 'Node.js', 'Jest', 'Figma'] },
+  { title: 'Styling', items: ['Tailwind'] },
 ] as const;
 
 export const stack = stackGroups.flatMap((group) => group.items);
-
-// на свёрнутой плитке — только главное, весь стек влезает лишь в раскрытую
-export const stackPreview = [
-  'React',
-  'TypeScript',
-  'Next.js',
-  'Node.js',
-  'Redux Toolkit',
-  'Zustand',
-  'React Query',
-  'PostgreSQL',
-  'Jest',
-  'Playwright',
-  'Tailwind',
-  'Vite',
-] as const satisfies readonly (typeof stack)[number][];
 
 export const principles = [
   {
