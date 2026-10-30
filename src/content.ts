@@ -31,13 +31,34 @@ export const links = [
 ] as const;
 
 export const stackGroups = [
-  { title: 'Core', items: ['React', 'TypeScript', 'Next.js', 'Astro'] },
-  { title: 'State & data', items: ['Zustand', 'MobX', 'React Query'] },
-  { title: 'Tooling', items: ['Vite', 'Node.js', 'Jest', 'Figma'] },
-  { title: 'Styling', items: ['Tailwind'] },
+  { title: 'Core', items: ['React', 'TypeScript', 'JavaScript', 'Next.js', 'Astro', 'HTML', 'CSS'] },
+  {
+    title: 'State & data',
+    items: ['Redux', 'Redux Toolkit', 'Zustand', 'MobX', 'React Query', 'RxJS', 'Redux-Observable'],
+  },
+  { title: 'Backend', items: ['Node.js', 'PostgreSQL', 'Prisma', 'NestJS', 'REST APIs'] },
+  { title: 'Testing', items: ['Jest', 'React Testing Library', 'Playwright'] },
+  { title: 'Tooling', items: ['Vite', 'Webpack', 'Git', 'Docker', 'Figma', 'i18next', 'Feature-Sliced Design'] },
+  { title: 'Styling', items: ['Tailwind', 'SCSS', 'CSS Modules', 'Ant Design'] },
 ] as const;
 
 export const stack = stackGroups.flatMap((group) => group.items);
+
+// на свёрнутой плитке — только главное, весь стек влезает лишь в раскрытую
+export const stackPreview = [
+  'React',
+  'TypeScript',
+  'Next.js',
+  'Node.js',
+  'Redux Toolkit',
+  'Zustand',
+  'React Query',
+  'PostgreSQL',
+  'Jest',
+  'Playwright',
+  'Tailwind',
+  'Vite',
+] as const satisfies readonly (typeof stack)[number][];
 
 export const principles = [
   {
