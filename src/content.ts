@@ -13,10 +13,10 @@ import photoGenex from './assets/photos/belgrade-genex.jpg';
 
 export const site = {
   name: 'Sergei Usachev',
-  title: 'Sergei Usachev - Full-Stack Developer',
+  title: 'Sergei Usachev - Frontend Engineer',
   description:
-    'Full-stack developer with a frontend focus, based in Serbia. 5.5+ years building websites and web apps with React, Next.js, TypeScript and Node.js.',
-  jobTitle: 'Full-Stack Developer',
+    'Frontend engineer based in Serbia. 5.5+ years building websites and web apps with React, Next.js and TypeScript, plus Node.js on the backend.',
+  jobTitle: 'Frontend Engineer',
   country: 'Serbia',
 };
 
@@ -81,7 +81,7 @@ export const principles = [
 
 export const about = {
   intro: [
-    'I’m a full-stack developer with a frontend focus and 5.5+ years of commercial experience in React, Next.js, TypeScript and Node.js. I build products end to end, from the API and database to the UI. I’ve started projects from an empty repo and taken over old codebases that needed cleaning up, and I like both.',
+    'I’m a senior frontend engineer with full-stack experience and 5.5+ years of commercial experience in React, Next.js, TypeScript and Node.js. I build products end to end, from the API and database to the UI. I’ve started projects from an empty repo and taken over old codebases that needed cleaning up, and I like both.',
     'What I pay attention to: pages that load fast, animations that don’t stutter, forms that work from the keyboard and layouts that don’t break on a small phone.',
   ],
   status: 'Open to new opportunities',
