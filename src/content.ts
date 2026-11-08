@@ -5,6 +5,7 @@ import place01Poster from './assets/projects/place01-poster.jpg';
 import concertsArchive from './assets/projects/concerts-archive.png';
 import space307Portal from './assets/projects/space307-portal.png';
 import axisHrm from './assets/projects/axis-hrm.png';
+import lockdock from './assets/projects/lockdock.png';
 import photoKotor from './assets/photos/kotor.jpg';
 import photoBench from './assets/photos/novi-sad-bench.jpg';
 import photoFortress from './assets/photos/novi-sad-fortress.jpg';
@@ -192,6 +193,16 @@ export const projects: Project[] = [
     // домен не показываем — технический адрес Vercel
     url: 'https://my-blog-blond-omega.vercel.app/',
     image: concertsArchive,
+  },
+  // личный проект не про веб, поэтому последний: превью My Work берётся из первого
+  {
+    name: 'LockDock',
+    description:
+      'Menu bar utility for macOS that keeps the Dock on the display you choose, so it stops jumping to another monitor.\nA small open source side project, written in Swift.',
+    stack: ['Swift', 'AppKit', 'Event Tap'],
+    host: 'github.com',
+    url: 'https://github.com/iamlykke/LockDock',
+    image: lockdock,
   },
 ];
 
