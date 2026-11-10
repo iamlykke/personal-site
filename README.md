@@ -1,4 +1,4 @@
-<a href="https://personal-site-ashen-one.vercel.app">
+<a href="https://www.sergeiusachev.dev">
   <img src="public/og.png" alt="Sergei Usachev — Frontend Engineer" width="100%">
 </a>
 
@@ -9,8 +9,8 @@
 </p>
 
 <p align="center">
-  <a href="https://personal-site-ashen-one.vercel.app"><b>Live site</b></a> ·
-  <a href="https://personal-site-ashen-one.vercel.app/sergei-usachev-cv.pdf">Resume</a> ·
+  <a href="https://www.sergeiusachev.dev"><b>Live site</b></a> ·
+  <a href="https://www.sergeiusachev.dev/sergei-usachev-cv.pdf">Resume</a> ·
   <a href="https://www.linkedin.com/in/sergeiusachev/">LinkedIn</a> ·
   <a href="mailto:usachev.frontend@gmail.com">Email</a>
 </p>
