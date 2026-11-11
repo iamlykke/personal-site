@@ -6,6 +6,7 @@ import concertsArchive from './assets/projects/concerts-archive.png';
 import space307Portal from './assets/projects/space307-portal.png';
 import axisHrm from './assets/projects/axis-hrm.png';
 import lockdock from './assets/projects/lockdock.png';
+import tvSlides from './assets/projects/tv-slides.png';
 import photoKotor from './assets/photos/kotor.jpg';
 import photoBench from './assets/photos/novi-sad-bench.jpg';
 import photoFortress from './assets/photos/novi-sad-fortress.jpg';
@@ -184,6 +185,15 @@ export const projects: Project[] = [
     host: 'behance.net',
     url: 'https://www.behance.net/gallery/214946281/Space307-Portal',
     image: space307Portal,
+  },
+  {
+    name: 'TV Slides',
+    description:
+      'Slides for office TVs: upload images and videos with a schedule in the admin panel, and every office screen plays them on a loop. Birthday and work anniversary slides are generated automatically.\nGoogle sign-in with roles, direct uploads to storage, open source.',
+    stack: ['Next.js', 'TypeScript', 'Prisma', 'Supabase', 'NextAuth', 'Tailwind'],
+    host: 'github.com',
+    url: 'https://github.com/iamlykke/tv-news',
+    image: tvSlides,
   },
   {
     name: 'Concerts Archive',
