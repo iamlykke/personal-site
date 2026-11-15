@@ -7,11 +7,6 @@ import space307Portal from './assets/projects/space307-portal.png';
 import axisHrm from './assets/projects/axis-hrm.png';
 import lockdock from './assets/projects/lockdock.png';
 import tvSlides from './assets/projects/tv-slides.png';
-import photoKotor from './assets/photos/kotor.jpg';
-import photoBench from './assets/photos/novi-sad-bench.jpg';
-import photoFortress from './assets/photos/novi-sad-fortress.jpg';
-import photoSunset from './assets/photos/sunset.jpg';
-import photoGenex from './assets/photos/belgrade-genex.jpg';
 
 export const site = {
   name: 'Sergei Usachev',
@@ -86,7 +81,6 @@ export const about = {
     'I’m a senior frontend engineer with full-stack experience and 6+ years of experience in React, Next.js, TypeScript and Node.js. I build products end to end, from the API and database to the UI. I’ve started projects from an empty repo and taken over old codebases that needed cleaning up, and I like both.',
     'What I pay attention to: pages that load fast, animations that don’t stutter, forms that work from the keyboard and layouts that don’t break on a small phone.',
   ],
-  status: 'Open to new opportunities',
   facts: [
     { label: 'Based in', value: 'Serbia', flag: 'rs' },
     { label: 'Experience', value: '6+ years' },
@@ -124,14 +118,6 @@ export const about = {
     { title: 'Travel', icon: 'plane', tags: ['New cities', 'Concert trips'] },
     { title: 'Sport', icon: 'trophy', tags: ['Tennis', 'Padel', 'Football', 'Formula 1'] },
   ],
-  // свои снимки — лента под хобби; place — подпись
-  photos: [
-    { src: photoKotor, place: 'Kotor', alt: 'Bay of Kotor at dusk, seen from the hills above the old town' },
-    { src: photoBench, place: 'Novi Sad', alt: 'A woman on a bench next to a street lamp, city skyline at sunset' },
-    { src: photoFortress, place: 'Novi Sad', alt: 'View from Petrovaradin Fortress over the Danube in golden light' },
-    { src: photoSunset, place: 'Novi Sad', alt: 'Two silhouettes watching the sun set over the city' },
-    { src: photoGenex, place: 'Belgrade', alt: 'Genex Tower framed by trees' },
-  ],
 };
 
 export type Project = {
@@ -151,7 +137,7 @@ export const projects: Project[] = [
   {
     name: 'Space307',
     description:
-      'Website for Space307, the international fintech product company I worked at.\nAvailable in English and Greek.',
+      'Website for Space307, the international fintech product company I worked at.\nI built the whole site on my own: two pages, the home page and About, in English and Greek.',
     stack: ['React', 'TypeScript', 'Vite', 'Motion', 'i18n'],
     host: 'space307.com',
     url: 'https://space307.com/',
@@ -161,7 +147,7 @@ export const projects: Project[] = [
   {
     name: 'Place.01',
     description:
-      'Company website for Place.01, a fintech development studio.',
+      'Company website for Place.01, a fintech development studio.\nI built the whole site on my own, from the first commit to release.',
     stack: ['React', 'TypeScript', 'Vite', 'Motion'],
     host: 'place01.ru',
     url: 'https://place01.ru/',

@@ -5,7 +5,6 @@ import ContactCta from './ContactCta.astro';
 import FlagRS from './FlagRS.astro';
 import { copy, about, links } from '../content';
 import { hobbyIcons, type HobbyIcon } from '../icons';
-import { Picture } from 'astro:assets';
 
 const resume = links.find((link) => link.label === 'Resume')!;
 ---
@@ -22,11 +21,6 @@ const resume = links.find((link) => link.label === 'Resume')!;
   </Fragment>
 
   <div slot="body" class="body">
-    <p class="status">
-      <span class="dot" aria-hidden="true"></span>
-      {about.status}
-    </p>
-
     <div class="intro">
       {about.intro.map((text) => <p>{text}</p>)}
     </div>
@@ -99,29 +93,6 @@ const resume = links.find((link) => link.label === 'Resume')!;
           ))
         }
       </ul>
-
-      <div class="photos-head">
-        <p class="label">Shot by me</p>
-      </div>
-      {/* ширина кадра ∝ его пропорциям — все одной высоты и вместе заполняют ряд */}
-      <ul class="photos">
-        {
-          about.photos.map((photo) => (
-            <li style={`flex-grow: ${(photo.src.width / photo.src.height).toFixed(3)}`}>
-              <figure>
-                <Picture
-                  src={photo.src}
-                  alt={photo.alt}
-                  formats={['avif', 'webp']}
-                  widths={[300, 600]}
-                  sizes="(max-width: 899px) 60vw, 20vw"
-                />
-                <figcaption>{photo.place}</figcaption>
-              </figure>
-            </li>
-          ))
-        }
-      </ul>
     </section>
 
     <ContactCta />
@@ -143,49 +114,6 @@ const resume = links.find((link) => link.label === 'Resume')!;
     flex-direction: column;
     gap: 40px;
     padding-bottom: 8px;
-  }
-
-  /* статус — как индикатор «онлайн»: точка мягко пульсирует */
-  .status {
-    align-self: flex-start;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0 0 -16px;
-    padding: 8px 14px 8px 12px;
-    border-radius: 999px;
-    background: rgba(20, 22, 28, 0.06);
-    font: 500 12px/1 var(--mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .dot {
-    position: relative;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: oklch(0.68 0.17 150);
-  }
-
-  .dot::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: inherit;
-    animation: pulse 1.8s ease-out infinite;
-  }
-
-  @keyframes pulse {
-    from {
-      opacity: 0.6;
-      scale: 1;
-    }
-    to {
-      opacity: 0;
-      scale: 2.8;
-    }
   }
 
   .intro {
@@ -497,129 +425,7 @@ const resume = links.find((link) => link.label === 'Resume')!;
     }
   }
 
-  /* лента своих фото */
-  .photos-head {
-    margin-top: 28px;
-  }
-
-  .photos {
-    margin: 12px 0 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    gap: 10px;
-  }
-
-  .photos li {
-    flex-basis: 0;
-    min-width: 0;
-  }
-
-  figure {
-    margin: 0;
-    transition:
-      rotate 0.4s var(--spring),
-      scale 0.4s var(--spring),
-      padding 0.5s,
-      background 0.5s,
-      box-shadow 0.5s;
-  }
-
-  figure :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    /* иначе браузер начинает перетаскивать саму картинку вместо ленты */
-    -webkit-user-drag: none;
-    user-select: none;
-  }
-
-  figcaption {
-    margin-top: 8px;
-    font: 500 11px var(--mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--label);
-  }
-
-  /* informal: фото как разбросанные отпечатки — белая рамка и наклон, при наведении выпрямляются */
-  :global([data-mode='informal']) figure {
-    padding: 6px 6px 8px;
-    border-radius: 6px;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(20, 22, 28, 0.12);
-  }
-
-  :global([data-mode='informal']) figure :global(img) {
-    border-radius: 3px;
-  }
-
-  :global([data-mode='informal']) figcaption {
-    margin-top: 6px;
-  }
-
-  :global([data-mode='informal']) .photos li:nth-child(5n + 1) figure {
-    rotate: -2.5deg;
-  }
-
-  :global([data-mode='informal']) .photos li:nth-child(5n + 2) figure {
-    rotate: 1.5deg;
-  }
-
-  :global([data-mode='informal']) .photos li:nth-child(5n + 3) figure {
-    rotate: -1deg;
-  }
-
-  :global([data-mode='informal']) .photos li:nth-child(5n + 4) figure {
-    rotate: 2deg;
-  }
-
-  :global([data-mode='informal']) .photos li:nth-child(5n + 5) figure {
-    rotate: -1.5deg;
-  }
-
-  @media (hover: hover) {
-    :global([data-mode='informal']) .photos li:hover figure {
-      position: relative;
-      z-index: 1;
-      rotate: 0deg;
-      scale: 1.06;
-    }
-  }
-
   @container (max-width: 559px) {
-    /* узко — лента прокручивается вбок (палец или перетаскивание мышью), без полосы прокрутки */
-    .photos {
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-      padding: 12px 12px 16px;
-      margin-inline: -12px;
-      cursor: grab;
-    }
-
-    .photos::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* пока тянем мышью — без прилипания к кадрам, иначе лента дёргается */
-    .photos.is-dragging {
-      scroll-snap-type: none;
-      cursor: grabbing;
-      user-select: none;
-    }
-
-    .photos li {
-      flex: none !important;
-      scroll-snap-align: start;
-    }
-
-    figure :global(img) {
-      width: auto;
-      height: 220px;
-    }
-
     .facts {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -635,44 +441,3 @@ const resume = links.find((link) => link.label === 'Resume')!;
     }
   }
 </style>
-
-<script>
-  // лента фото: на телефоне листается пальцем сама, мышью — тянем
-  const strip = document.querySelector<HTMLElement>('.photos');
-
-  if (strip) {
-    let startX = 0;
-    let startScroll = 0;
-    let dragging = false;
-
-    strip.addEventListener('dragstart', (e) => e.preventDefault());
-
-    strip.addEventListener('pointerdown', (e) => {
-      // тач листается нативно; тянем только мышью и только если есть куда
-      if (e.pointerType !== 'mouse' || strip.scrollWidth <= strip.clientWidth) return;
-      dragging = true;
-      startX = e.clientX;
-      startScroll = strip.scrollLeft;
-      strip.classList.add('is-dragging');
-      // захват — чтобы тянуть можно было и за пределами ленты
-      try {
-        strip.setPointerCapture(e.pointerId);
-      } catch {}
-    });
-
-    strip.addEventListener('pointermove', (e) => {
-      if (!dragging) return;
-      strip.scrollLeft = startScroll - (e.clientX - startX);
-    });
-
-    const stop = () => {
-      if (!dragging) return;
-      dragging = false;
-      // снап возвращается — лента мягко встаёт на ближайший кадр
-      strip.classList.remove('is-dragging');
-    };
-
-    strip.addEventListener('pointerup', stop);
-    strip.addEventListener('pointercancel', stop);
-  }
-</script>

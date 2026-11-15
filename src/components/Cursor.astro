@@ -2,6 +2,7 @@
 import { heart } from '../icons';
 ---
 
+<!-- обычный курсор везде; только над фото в informal он превращается в сердечко — намёк на двойной клик -->
 <div class="cursor" aria-hidden="true">
   <div class="blob">
     <svg class="heart" viewBox="0 0 24 24"><path d={heart}></path></svg>
@@ -17,7 +18,6 @@ import { heart } from '../icons';
     z-index: 10;
     mix-blend-mode: difference;
     pointer-events: none;
-    opacity: 0;
     will-change: transform;
   }
 
@@ -26,41 +26,25 @@ import { heart } from '../icons';
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     background: #fff;
     translate: -50% -50%;
-    transition:
-      width 0.35s var(--spring),
-      height 0.35s var(--spring);
-  }
-
-  .heart {
-    position: absolute;
-    width: 22px;
-    height: 22px;
-    fill: #000;
     opacity: 0;
-    scale: 0.5;
+    scale: 0.3;
     transition:
       opacity 0.2s,
       scale 0.35s var(--spring);
   }
 
-  /* над ссылками и кнопками: маленькая точка */
-  .cursor[data-state='dot'] .blob {
-    width: 10px;
-    height: 10px;
+  .heart {
+    width: 22px;
+    height: 22px;
+    fill: #000;
   }
 
-  /* над фото: сердечко — намёк на двойной клик */
   .cursor[data-state='like'] .blob {
-    width: 52px;
-    height: 52px;
-  }
-
-  .cursor[data-state='like'] .heart {
     opacity: 1;
     scale: 1;
   }
@@ -70,18 +54,10 @@ import { heart } from '../icons';
       display: block;
     }
 
-    /* !important — иначе cursor: pointer у кнопок перебивает, и курсор двоится */
-    :global([data-mode='informal'] *) {
-      cursor: none !important;
-    }
-
-    /* модальное окно (планшеты) рисуется поверх всего, кружок под ним не видно */
-    :global([data-mode='informal'] dialog:modal *) {
-      cursor: auto !important;
-    }
-
-    :global([data-mode='informal'] dialog:modal :is(a, button)) {
-      cursor: pointer !important;
+    /* системный курсор прячем только над самим фото, кнопки на нём остаются обычными */
+    :global([data-mode='informal'] .photo),
+    :global([data-mode='informal'] .photo *:not(a, button, a *, button *)) {
+      cursor: none;
     }
   }
 </style>
@@ -90,19 +66,17 @@ import { heart } from '../icons';
   const cursor = document.querySelector<HTMLElement>('.cursor')!;
 
   function stateFor(target: EventTarget | null) {
-    const el = target instanceof Element ? target.closest('.photo, a, button:not(.open)') : null;
-    if (!el) return 'default';
-    return el.matches('.photo') ? 'like' : 'dot';
+    if (!(target instanceof Element)) return 'default';
+    return target.closest('.photo') && !target.closest('a, button') ? 'like' : 'default';
   }
 
   window.addEventListener('pointermove', (e) => {
     if (e.pointerType !== 'mouse') return;
     cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-    cursor.style.opacity = '1';
     cursor.dataset.state = stateFor(e.target);
   });
 
   document.documentElement.addEventListener('pointerleave', () => {
-    cursor.style.opacity = '0';
+    cursor.dataset.state = 'default';
   });
 </script>

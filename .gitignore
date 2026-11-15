@@ -8,3 +8,9 @@ dist/
 .claude/skills/
 skills-lock.json
 .impeccable/
+
+# субагент-рекрутер: агент, команда /recruiter, Playwright MCP и его скриншоты
+.claude/agents/
+.claude/commands/
+.mcp.json
+.playwright-mcp/
